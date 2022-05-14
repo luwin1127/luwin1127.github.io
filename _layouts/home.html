@@ -11,7 +11,7 @@ layout: default
         <div class="catalogue-line"></div>
 
         <p>
-          {{ post.content | strip_html | truncatewords: 65 }}
+          {{ post.content | strip_html | truncatewords: 2 }}
         </p>
 
       </div>
@@ -23,12 +23,12 @@ layout: default
   <div class="flex-container">
     <div>
       {% if paginator.previous_page %}
-        <a href="{{ paginator.previous_page_path | prepend: site.baseurl }}"><i class="fas fa-angle-left"></i>&nbspNewer</a>
+        <a href="{{ paginator.previous_page_path | prepend: site.baseurl }}"><i class="fa fa-angle-left"></i>&nbspNewer</a>
       {% endif %}
     </div>
     <div>
       {% if paginator.next_page %}
-        <a href="{{ paginator.next_page_path | prepend: site.baseurl }}">Older&nbsp<i class="fas fa-angle-right"></i></a>
+        <a href="{{ paginator.next_page_path | prepend: site.baseurl }}">Older&nbsp<i class="fa fa-angle-right"></i></a>
       {% endif %}
     </div>
   </div>
