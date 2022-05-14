@@ -827,8 +827,10 @@ pyinstaller -F snakeMain_plus.py -p snakeClass.py -p snakeFunction.py
 
 感谢上述作者的文章。
 
-在这里把自己的源码、使用的图片和音效全部开源，希望能够帮助更多人。
+[在这里]([{{site.page}}/assets/sources/贪吃蛇大作战.zip](https://download.csdn.net/download/Ruins_LEE/16735368?spm=1001.2014.3001.5501))把自己的源码、使用的图片和音效全部开源，希望能够帮助更多人。
+
+如果没有积分下载，可以通过邮箱联系我，我将通过邮件发给你。
+
+邮箱地址：lordofdapanji@foxmail
 
 ：）
-
-$———End———$
