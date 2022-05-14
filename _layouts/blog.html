@@ -29,21 +29,30 @@ layout: default
     {%- assign years = site.posts | group_by_exp: "post", "post.date | date: '%Y'" %}
     <!-- 展示每一年的文章 -->
     {%- for year in years %}
-      <h3 class="post__list_title">{{ year.name }}</h3>
+    <!-- 没有写过文章的年份，但是其他tag下写过文章的年份，就不展示了 -->
+    <!-- 例如tag为douban的写过2020年的文章，但是tag为notdouban的没有写过2020年的文章 -->
+    <!-- 在notdouban的页面里面就不用显示2020年，以免累赘 -->
+      {%- for post in year.items-%}
+        {%- if post.tag == 'notdouban' -%}
+          <h3 class="post__list_title">{{ year.name }}</h3>
+          <!-- 只执行一次，不然会产生很多个年份 -->
+          {% break %}
+        {%- endif -%}
+      {%- endfor-%}
       {%- assign posts = year.items %}      
       <!-- 以列表形式展示文章 -->
       <ul>
         <!-- 展示所有文章 -->
         {%- for post in posts %}
-        {% if post.tag != 'douban' %}        
+        {%- if post.tag == 'notdouban' -%}        
           <li class="post__list_item" data-category="{{ post.categories | join: ';' }}" {% if post.img %}data-img="{{ post.img | img_url_prefix }}"{% endif %}>
             <a href="{{ post.url | relative_url }}">
               <span class="archive__time">{{ post.date | date: "%Y-%m-%d" }}</span>
               <span class="archive__title">{{ post.title }}</span>
             </a>
           </li>
-        {% endif %}
-        {%- endfor %}
+        {%- endif -%}
+        {%- endfor -%}
       </ul>
     {%- endfor %}
   </div>

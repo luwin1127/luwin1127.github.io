@@ -34,7 +34,17 @@ layout: default
     {%- assign years = site.posts | group_by_exp: "post", "post.date | date: '%Y'" %}
     <!-- 展示每一年的文章 -->
     {%- for year in years %}
-      <h3 class="post__list_title">{{ year.name }}</h3>
+    <!-- 没有写过文章的年份，但是其他tag下写过文章的年份，就不展示了 -->
+    <!-- 例如tag为douban的写过2020年的文章，但是tag为notdouban的没有写过2020年的文章 -->
+    <!-- 在notdouban的页面里面就不用显示2020年，以免累赘 -->
+      {%- for post in year.items-%}
+      <!-- 这里和blog.html有区别！ -->
+        {%- if post.tag == 'douban' -%}
+          <h3 class="post__list_title">{{ year.name }}</h3>
+          <!-- 只执行一次，不然会产生很多个年份 -->
+          {% break %}
+        {%- endif -%}
+      {%- endfor-%}
       {%- assign posts = year.items %}      
       <!-- 以列表形式展示文章 -->
       <ul>
