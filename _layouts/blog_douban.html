@@ -1,0 +1,57 @@
+---
+layout: default
+---
+
+{% include header.html %}
+
+<main class="post__archive" id="postArchive">
+  {%- include header_nav.html -%}
+  {%- if site.status -%}
+  {%- include status.html -%}
+  {%- endif -%}
+  <!-- 页面导航生成 -->
+	{%- if site.categories.size > 0 -%}
+  <nav class="blog__categories">
+    <a href="#all" data-category="all" class="category active nav-link">Douban's everything</a>
+  </nav>
+	{%- endif -%}
+  <!-- 页面导航结束 -->
+
+  <!-- 页面展示生成 -->
+  <div class="post__list archive__list">
+    <body for="html-export">
+      <div class="mume markdown-preview  ">
+      <font face="&#x534E;&#x6587;&#x4E2D;&#x5B8B;">
+        <font size="5">
+        <p>&#x8C22;&#x8C22;&#x4F60;&#x80FD;&#x591F;&#x627E;&#x5230;&#x8FD9;&#x91CC;&#x3002;</p>
+        <p>&#x9047;&#x89C1;&#x4F60;&#xFF0C;&#x771F;&#x7F8E;&#x597D;&#x3002;</p>
+        <p>: )</p>
+        </font>
+        </font>
+      </div>
+    </body>
+    <!-- 按照年份分类 -->
+    {%- assign years = site.posts | group_by_exp: "post", "post.date | date: '%Y'" %}
+    <!-- 展示每一年的文章 -->
+    {%- for year in years %}
+      <h3 class="post__list_title">{{ year.name }}</h3>
+      {%- assign posts = year.items %}      
+      <!-- 以列表形式展示文章 -->
+      <ul>
+        <!-- 展示所有文章 -->
+        {%- for post in posts %}
+        {% if post.tag == 'douban' %}        
+          <li class="post__list_item" data-category="{{ post.categories | join: ';' }}" {% if post.img %}data-img="{{ post.img | img_url_prefix }}"{% endif %}>
+            <a href="{{ post.url | relative_url }}">
+              <span class="archive__time">{{ post.date | date: "%Y-%m-%d" }}</span>
+              <span class="archive__title">{{ post.title }}</span>
+            </a>
+          </li>
+        {% endif %}
+        {%- endfor %}
+      </ul>
+    {%- endfor %}
+  </div>
+  <!-- 页面展示结束 -->
+</main>
+{%- include footer.html -%}

@@ -1,0 +1,52 @@
+---
+layout: default
+---
+
+{% include header.html %}
+
+<main class="post__archive" id="postArchive">
+  {%- include header_nav.html -%}
+  {%- if site.status -%}
+  {%- include status.html -%}
+  {%- endif -%}
+  <!-- 页面导航生成 -->
+	{%- if site.categories.size > 0 -%}
+  <nav class="blog__categories">
+    <a href="#all" data-category="all" class="category active nav-link">{{ site.theme_setting.lang.category_all | default: "Blogs" }}</a>
+    {%- for category in site.categories %}
+      <!-- 下面这行代码用于隐藏category为Dairy的导航 -->
+      {%- if category[0] != 'Dairy' -%}
+      <a href="#{{ category[0] }}" class="category nav-link" data-category="{{ category[0] }}">{{ category[0] }}</a>
+      {%- endif -%}
+    {%- endfor %}
+  </nav>
+	{%- endif -%}
+  <!-- 页面导航结束 -->
+
+  <!-- 页面展示生成 -->
+  <div class="post__list archive__list">
+    <!-- 按照年份分类 -->
+    {%- assign years = site.posts | group_by_exp: "post", "post.date | date: '%Y'" %}
+    <!-- 展示每一年的文章 -->
+    {%- for year in years %}
+      <h3 class="post__list_title">{{ year.name }}</h3>
+      {%- assign posts = year.items %}      
+      <!-- 以列表形式展示文章 -->
+      <ul>
+        <!-- 展示所有文章 -->
+        {%- for post in posts %}
+        {% if post.tag != 'douban' %}        
+          <li class="post__list_item" data-category="{{ post.categories | join: ';' }}" {% if post.img %}data-img="{{ post.img | img_url_prefix }}"{% endif %}>
+            <a href="{{ post.url | relative_url }}">
+              <span class="archive__time">{{ post.date | date: "%Y-%m-%d" }}</span>
+              <span class="archive__title">{{ post.title }}</span>
+            </a>
+          </li>
+        {% endif %}
+        {%- endfor %}
+      </ul>
+    {%- endfor %}
+  </div>
+  <!-- 页面展示结束 -->
+</main>
+{%- include footer.html -%}

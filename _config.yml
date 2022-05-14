@@ -1,6 +1,6 @@
 # Site settings
 title:          雷烈
-description:    "To record many things."
+description:    "往来皆过客，挥别笑留名。"
 url:            https://github.com/luwin1127/luwin1127.github.io
 # Author
 author:
@@ -34,5 +34,14 @@ related_posts_section:
 # Links to social media
 social:
   email: lordofdapanji@foxmail.com
-  github: https://github.com/luwin1127/
-  twitter: /about.html
+  github: luwin1127
+
+# The followings are settings for displays of your blog.
+theme_setting:
+  # Every default value in the following settings is false. You can set them globally here or separately in a single post/page/chapter.
+  code: true # Code highlight.
+  math: true # Mathjax
+  #  Locales of this theme.
+  lang:
+    category_all: Blogs # The first tag in the categories bar on the blog layout page. By clicking it all of your posts will be shown. Default is 'All'.
+    blog_title: 返回 # The text of ← back url on the top of the post layout.  Default is 'Home'.
