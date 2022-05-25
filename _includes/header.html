@@ -2,7 +2,7 @@
   {%- if site.logo -%}
   <img src="{{ site.logo | img_url_prefix }}" class="logo_img">
   {%- endif -%}
-  <h1>{{ site.title }}</h1>
+  <h1><font face="华文中宋">{{ site.title }}</font></h1>
 </a>
 {%- if "slides,chapter,book" contains page.layout and site.theme_setting.archive_page -%}
 {%- assign archive_page = site.pages | where: "path", site.theme_setting.archive_page | first -%}

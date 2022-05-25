@@ -12,11 +12,11 @@ layout: default
   <!-- 页面导航生成 -->
 	{%- if site.categories.size > 0 -%}
   <nav class="blog__categories">
-    <a href="#all" data-category="all" class="category active nav-link">{{ site.theme_setting.lang.category_all | default: "Blogs" }}</a>
+    <a href="#all" data-category="all" class="category active nav-link"><font face="Times New Roman">{{ site.theme_setting.lang.category_all | default: "Blogs" }}</font></a>
     {%- for category in site.categories %}
       <!-- 下面这行代码用于隐藏category为Dairy的导航 -->
       {%- if category[0] != 'Dairy' -%}
-      <a href="#{{ category[0] }}" class="category nav-link" data-category="{{ category[0] }}">{{ category[0] }}</a>
+      <a href="#{{ category[0] }}" class="category nav-link" data-category="{{ category[0] }}"><font face="Times New Roman">{{ category[0] }}</font></a>
       {%- endif -%}
     {%- endfor %}
   </nav>
@@ -34,7 +34,7 @@ layout: default
     <!-- 在notdouban的页面里面就不用显示2020年，以免累赘 -->
       {%- for post in year.items-%}
         {%- if post.tag == 'notdouban' -%}
-          <h3 class="post__list_title">{{ year.name }}</h3>
+          <h3 class="post__list_title"><font face="Times New Roman">{{ year.name }}</font></h3>
           <!-- 只执行一次，不然会产生很多个年份 -->
           {% break %}
         {%- endif -%}
@@ -47,8 +47,8 @@ layout: default
         {%- if post.tag == 'notdouban' -%}        
           <li class="post__list_item" data-category="{{ post.categories | join: ';' }}" {% if post.img %}data-img="{{ post.img | img_url_prefix }}"{% endif %}>
             <a href="{{ post.url | relative_url }}">
-              <span class="archive__time">{{ post.date | date: "%Y-%m-%d" }}</span>
-              <span class="archive__title">{{ post.title }}</span>
+              <span class="archive__time"><font face="Times New Roman">{{ post.date | date: "%Y-%m-%d" }}</font></span>
+              <span class="archive__title"><font face="华文中宋">{{ post.title }}</font></span>
             </a>
           </li>
         {%- endif -%}

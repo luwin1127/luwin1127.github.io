@@ -20,19 +20,23 @@ layout: default
           </svg>
           <span class="post__archive_icon"></span>
         </div>
+        <font face="华文中宋">
         {{ site.theme_setting.lang.blog_title | default: site.title }}
+        </font>
       </a>
     </nav>
   </div>
   <article class="post">
     <header class="post__header">
-      <h1 class="post__title">{{ page.title | escape }}</h1>
+      <h1 class="post__title"><font face="华文中宋">{{ page.title | escape }}</font></h1>
       <div class="post__meta">
-        <time>{{ page.date | date: "%Y-%m-%d" }}</time>
+        <time><font face="Times New Roman">{{ page.date | date: "%Y-%m-%d" }}</font></time>
       </div>
     </header>
     <div class="post__content content">
+      <font face="华文中宋">
       {{ content | toc | img_prefix }}
+      </font>
     </div>
   </article>
   {%- if site.comment.enabled -%}
