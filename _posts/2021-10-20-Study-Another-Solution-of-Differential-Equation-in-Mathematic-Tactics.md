@@ -207,7 +207,7 @@ sol1 = dsolve(eq1,eq2,eq3,con1,con2,con3);
 
 求解结果为
 
-![fig1]({{site.page}}/images/img-2021-10-20/fig1.png)
+![fig1]({{site.page}}/images/img-2021-10-20/fig1.webp)
 
 书中求解结果为
 
@@ -252,7 +252,7 @@ res.delta = eval(res.delta);
 
 求解结果为
 
-![fig2]({{site.page}}/images/img-2021-10-20/fig2.png)
+![fig2]({{site.page}}/images/img-2021-10-20/fig2.webp)
 
 与书中结果相同。
 
@@ -318,7 +318,7 @@ sol2 = dsolve(eq1,eq2,eq3,con1,con2,con3);
 
 求解结果为
 
-![fig3]({{site.page}}/images/img-2021-10-20/fig3.png)
+![fig3]({{site.page}}/images/img-2021-10-20/fig3.webp)
 
 书中求解结果为
 
@@ -370,7 +370,7 @@ sol3 = dsolve(eq1,eq2,eq3,con1,con2,con3);
 
 求解结果为
 
-![fig4]({{site.page}}/images/img-2021-10-20/fig4.png)
+![fig4]({{site.page}}/images/img-2021-10-20/fig4.webp)
 
 书中求解结果为
 
@@ -406,7 +406,7 @@ sol4.y2 = subs(sol4.y2,t,t-delta);
 
 求解结果为
 
-![fig5]({{site.page}}/images/img-2021-10-20/fig5.png)
+![fig5]({{site.page}}/images/img-2021-10-20/fig5.webp)
 
 书中求解结果为
 
@@ -490,7 +490,7 @@ axis([0 t(end) 0 110]);
 
 结果为
 
-![fig7]({{site.page}}/images/img-2021-10-20/fig7.png)
+![fig7]({{site.page}}/images/img-2021-10-20/fig7.webp)
 
 全部源码如下（==作者MATLAB版本为2018b==）：
 

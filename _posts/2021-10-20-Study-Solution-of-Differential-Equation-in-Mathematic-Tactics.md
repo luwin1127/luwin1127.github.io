@@ -219,7 +219,7 @@ sol1 = dsolve(eq1,eq2,eq3,con1,con2,con3);
 
 即如下图（A）、（B）所示情况。
 
-![]({{site.page}}/images/img-2021-10-20/fig8.jpg)
+![]({{site.page}}/images/img-2021-10-20/fig8.webp)
 
 上述MATLAB代码已经求得$\mu_1(t)$和$\mu_2(t)$的表达式，因此只需再在MATLAB中编写代码求解$\mu_1(0)$和$\mu_2(0)$即可。
 
@@ -249,7 +249,7 @@ eval(res.mu2)=-14.677992676220697
 
 即如下图所示情况。
 
-![fig9]({{site.page}}/images/img-2021-10-20/fig9.jpg)
+![fig9]({{site.page}}/images/img-2021-10-20/fig9.webp)
 
 也就是说，在$t \in [0,T]$内，甲方的火力分配策略不会改变，持续攻击乙方第一类作战单位。该结果与[上一篇文章](https://blog.csdn.net/Ruins_LEE/article/details/120733615)的结果有所区别。
 
