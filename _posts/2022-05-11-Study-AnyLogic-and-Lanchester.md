@@ -51,15 +51,15 @@ $$
 
 点击左上角“文件”，再点击“新建”，最后点击“模型”。
 
-![fig1]({{site.page}}/images/img-2022-05-11/fig01.png)
+![fig1]({{site.page}}/images/img-2022-05-11/fig01.webp)
 
 新建模型，模型名字根据自己喜好起，位置放在一个自己之后比较好找的位置，模型时间单位选秒（或者其他单位均可）。设置完毕后，点击“完成”。
 
-![fig2]({{site.page}}/images/img-2022-05-11/fig02.png)
+![fig2]({{site.page}}/images/img-2022-05-11/fig02.webp)
 
 这样一个模型界面就建立好了，如果没有出意外的话，会看到下面这样的画面。
 
-![fig3]({{site.page}}/images/img-2022-05-11/fig03.png)
+![fig3]({{site.page}}/images/img-2022-05-11/fig03.webp)
 
 # 2. 创建场景
 
@@ -77,7 +77,7 @@ $$
 
 经过一番画图和添加参数，会得到下面这样的场景。
 
-![fig4]({{site.page}}/images/img-2022-05-11/fig04.png)
+![fig4]({{site.page}}/images/img-2022-05-11/fig04.webp)
 
 图片中的1、2、3和上面写到序号1、2、3相对应。1对应的就是平台，这里我设置的尺寸是`600*600`，设置参数的步骤在第3节说。
 
@@ -87,9 +87,9 @@ $$
 
 在这里说一下3中有个红色的方块和蓝色的方块，这两个方块可以用**矩形**画出来，是用来设置智能体的颜色的，它们的设置如下：
 
-![red_setting]({{site.page}}/images/img-2022-05-11/fig04-insert-red.png)
+![red_setting]({{site.page}}/images/img-2022-05-11/fig04-insert-red.webp)
 
-![blue_setting]({{site.page}}/images/img-2022-05-11/fig04-insert-blue.png)
+![blue_setting]({{site.page}}/images/img-2022-05-11/fig04-insert-blue.webp)
 
 # 3. 添加场景参数
 
@@ -107,7 +107,7 @@ $$
 
 按照如下顺序把**参数**添加进场景中：“面板”——>“智能体”——>“智能体组件”——>“参数”，鼠标左键单击就可以把**参数**拖拽进场景中了，设置参数名称、类型和默认值在“属性”栏中设置。鼠标左键单击**参数**图标左边的小圆圈就可以了（注意：点文字是没有用的），像下图一样设置参数。
 
-![fig5]({{site.page}}/images/img-2022-05-11/fig05.png)
+![fig5]({{site.page}}/images/img-2022-05-11/fig05.webp)
 
 这里给出所有用到的**参数**的名称、类型和默认值。下面这些**参数**用于智能体`combatSatSwarm`的参数设置。
 
@@ -135,7 +135,7 @@ $$
 
 按照如下顺序把**变量**添加进场景中：“面板”——>“智能体”——>“智能体组件”——>“变量”，操作与添加**参数**的操作一样，鼠标左键单击拖拽进场景中即可，同样在“属性”栏中设置名称和类型，初始值不用设置。
 
-![fig6]({{site.page}}/images/img-2022-05-11/fig06.png)
+![fig6]({{site.page}}/images/img-2022-05-11/fig06.webp)
 
 这里给出所有用到的**变量**的名称、类型。下面4种**变量**用于记录对抗过程中4种不同类型兵种的数量变化。
 
@@ -149,10 +149,10 @@ $$
 按照如下顺序把**数据集**添加进场景中：“面板”——>“分析”——>“数据”——>“数据集”，操作与添加**参数**的操作一样，鼠标左键单击拖拽进场景中即可，有两个数据集，（1）`forceRed`和（2）`forceBlue`。它们的属性按照下面的图片设置。这两个数据集用于存储红方和蓝方的兵力数量变化情况，接下来会导出至excel文件中。
 
 `forceRed`的属性如下。
-![fig7]({{site.page}}/images/img-2022-05-11/fig07.png)
+![fig7]({{site.page}}/images/img-2022-05-11/fig07.webp)
 
 `forceBlue`的属性如下。
-![fig8]({{site.page}}/images/img-2022-05-11/fig08.png)
+![fig8]({{site.page}}/images/img-2022-05-11/fig08.webp)
 
 ## 3.4 excel文件
 
@@ -161,7 +161,7 @@ $$
 1. 在电脑上某一位置新建一个excel文件，这里为了方便，我把excel文件创建在了AnyLogic模型文件夹里，命名为`data.xlsx`；
 2. 按照如下顺序把**excel文件**添加进场景中：“面板”——>“连接”——>“连接”——>“Excel文件”，操作与添加**参数**的操作一样，鼠标左键单击拖拽进场景中即可；
 3. 在属性栏中，先设置好“名称”，再在“浏览”中找到刚才新建的excel文件，点击“确定”即可。
-![fig9]({{site.page}}/images/img-2022-05-11/fig09.png)
+![fig9]({{site.page}}/images/img-2022-05-11/fig09.webp)
 
 这样就把新建好的excel文件链接到AnyLogic模型中了。后面会通过代码把模型中储存的数据导出至外部的excel文件中，会在第3.7节中说明。
 
@@ -191,7 +191,7 @@ for (int i = 0; i < combatSatSwarms.size(); i++) {  // 遍历所有combatSatSwar
 
 `step()`函数是智能体群`combatSatSwarm`的内置函数，在第5章会介绍。
 
-![fig10]({{site.page}}/images/img-2022-05-11/fig10.png)
+![fig10]({{site.page}}/images/img-2022-05-11/fig10.webp)
 
 事件`step`的属性按照上图设置，类型选择`到时`，模式选择`循环`，复发时间（即循环时间）为`1秒`，即1秒触发1次`step`事件。
 
@@ -231,7 +231,7 @@ forceBDVar = 0;
 forceBKVar = 0;
 ```
 
-![fig11]({{site.page}}/images/img-2022-05-11/fig11.png)
+![fig11]({{site.page}}/images/img-2022-05-11/fig11.webp)
 
 事件`collectData`的属性按照上图设置，类型选择`到时`，模式选择`循环`，复发时间（即循环时间）为`1秒`，即1秒触发1次`collectData`事件。
 
@@ -282,7 +282,7 @@ for (int i = 0; i < teamSize; i++) {  // 遍历所有combatSatSwarms个体
 }
 ```
 
-![fig12]({{site.page}}/images/img-2022-05-11/fig12.png)
+![fig12]({{site.page}}/images/img-2022-05-11/fig12.webp)
 
 点击“+”即可添加参数。如果要删除参数的话，可以先选中要删除的参数，再点击“-”号。调换参数位置需要先选中该参数，然后点击上箭头或者下箭头。这里的参数输入顺序是很重要的，在调用函数时，输入参数的顺序不能乱。
 
@@ -290,7 +290,7 @@ for (int i = 0; i < teamSize; i++) {  // 遍历所有combatSatSwarms个体
 
 在`Main`中，点击空白处，”属性“栏会变成下面这样。
 
-![fig13]({{site.page}}/images/img-2022-05-11/fig13.png)
+![fig13]({{site.page}}/images/img-2022-05-11/fig13.webp)
 
 我们要设置的是“启动时”和“销毁时”的函数。
 
@@ -324,19 +324,19 @@ data.writeDataSet(forceBlue,1,2,3);
 
 **第一步**：选择创建的智能体类型。按照如下顺序点击：
 
-![fig14]({{site.page}}/images/img-2022-05-11/fig14.png)
+![fig14]({{site.page}}/images/img-2022-05-11/fig14.webp)
 
 **第二步**： 创建智能体类型。这一步会出现两个选项，“我想创建新智能体类型”和“我想使用现有智能体类型”，在一开始创建智能体的时候，一般选择“我想创建新智能体类型”。等建立了一个智能体后，想要创建相同类型的智能体，可以选择“我想使用现有智能体类型”。点击下一步。
 
-![fig15]({{site.page}}/images/img-2022-05-11/fig15.png)
+![fig15]({{site.page}}/images/img-2022-05-11/fig15.webp)
 
 **第三步**：填写智能体名称。要填写的地方有两个，一个是新类型名，一个是智能体群名。类型名是这一类智能体的统称，首字母一般要大写，写好类型名后，智能体群名会自动补上。这里我只填写了新类型名`CombatSatSwarm`，智能体群名自动补上了`combatSatSwarm`。“我正在‘从头’创建智能体群”大多数情况下都得选择上，下面两个选项“使用数据库表”和“智能体将在流程图中使用”一般不选。点击下一步。
 
-![fig16]({{site.page}}/images/img-2022-05-11/fig16.png)
+![fig16]({{site.page}}/images/img-2022-05-11/fig16.webp)
 
 **第四步**：选择智能体2D/3D模型。按照自己需要选择模型即可，这里我选择了`无`，因为在`Main`中已经画好了智能体的形状。可以选择的选项有3D、2D和无，要注意这三个选项的不同。点击下一步。
 
-![fig17]({{site.page}}/images/img-2022-05-11/fig17.png)
+![fig17]({{site.page}}/images/img-2022-05-11/fig17.webp)
 
 **第五步**：添加参数。左键单击<添加新…>来添加参数，再在参数框里面写参数名字，然后选择好类型，再点击下一步。
 
@@ -370,29 +370,29 @@ data.writeDataSet(forceBlue,1,2,3);
 
 - `double`类型的参数按照下图方式设置即可。
 
-![fig18-1]({{site.page}}/images/img-2022-05-11/fig18-1.png)
+![fig18-1]({{site.page}}/images/img-2022-05-11/fig18-1.webp)
 
 - `Color`类型的参数按照下图方式设置即可。
 
-![fig18-2]({{site.page}}/images/img-2022-05-11/fig18-2.png)
+![fig18-2]({{site.page}}/images/img-2022-05-11/fig18-2.webp)
 
 - `速度（米每秒）`类型的参数按照下图方式设置即可。
 
-![fig18-3]({{site.page}}/images/img-2022-05-11/fig18-3.png)
+![fig18-3]({{site.page}}/images/img-2022-05-11/fig18-3.webp)
 
 - `TypeOption`类型的参数按照下图方式设置即可。
 
-![fig18-4]({{site.page}}/images/img-2022-05-11/fig18-4.png)
+![fig18-4]({{site.page}}/images/img-2022-05-11/fig18-4.webp)
 
 **注意**！！！完成一项参数设置之后，不要点击“下一步”，也不要按回车键，左键单击<添加新…>才能添加新的参数！
 
 **第六步**：创建群大小。有两个选项，“创建群具有xx个智能体”和“创建初始为空的群”，我会在模型运行时添加智能体，按需选择。我发现的规律：要是一些固定不变的智能体群，例如房子、发电机组，可以选择创建群具有xx个智能体；要是一些在运行过程中会有数量变化的智能体群，例如轰炸机、鸟群，可以选择创建初始为空的群，我会在模型运行时添加智能体。点击下一步。
 
-![fig19]({{site.page}}/images/img-2022-05-11/fig19.png)
+![fig19]({{site.page}}/images/img-2022-05-11/fig19.webp)
 
 **第七步**：配置环境。目前我能用到了有两个地方，一个是大小，一个是应用随机布局。大小的话根据模型实际需要设置，应用随机布局是否勾选同样看要解决的问题实际要求。点击完成。
 
-![fig20]({{site.page}}/images/img-2022-05-11/fig20.png)
+![fig20]({{site.page}}/images/img-2022-05-11/fig20.webp)
 
 好了！`CombatSatSwarm`就这样创建好了！
 
@@ -400,7 +400,7 @@ data.writeDataSet(forceBlue,1,2,3);
 
 来看看一共有多少参数。
 
-![fig21]({{site.page}}/images/img-2022-05-11/fig21.png)
+![fig21]({{site.page}}/images/img-2022-05-11/fig21.webp)
 
 有下面这些：
 
@@ -455,7 +455,7 @@ data.writeDataSet(forceBlue,1,2,3);
 
 设置如下。
 
-![fig22]({{site.page}}/images/img-2022-05-11/fig22.png)
+![fig22]({{site.page}}/images/img-2022-05-11/fig22.webp)
 
 ## 5.4 函数
 
@@ -1052,7 +1052,7 @@ else
   
 的几何参数，让智能体动起来。
 
-![fig23]({{site.page}}/images/img-2022-05-11/fig23.png)
+![fig23]({{site.page}}/images/img-2022-05-11/fig23.webp)
 
 ### 5.5.1 satAgent
 
@@ -1327,9 +1327,9 @@ end
 
 比较两者结果，最后会得到如下曲线图。
 
-![fig24]({{site.page}}/images/img-2022-05-11/fig24.png)
+![fig24]({{site.page}}/images/img-2022-05-11/fig24.webp)
 
-![fig25]({{site.page}}/images/img-2022-05-11/fig25.png)
+![fig25]({{site.page}}/images/img-2022-05-11/fig25.webp)
 
 曲线十分贴合，成功验证。
 
