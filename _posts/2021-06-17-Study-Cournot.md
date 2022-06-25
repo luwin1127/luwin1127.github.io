@@ -3,7 +3,7 @@ permalink: /:year-:month-:day/:title
 layout: post
 title:  "古诺（Cournot）竞争博弈模型 matlab仿真代码实现"
 author: "Lei Lie"
-categories: Study
+categories: Study,Code
 tag: notdouban
 ---
 

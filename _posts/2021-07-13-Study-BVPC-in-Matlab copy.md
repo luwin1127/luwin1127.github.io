@@ -3,7 +3,7 @@ permalink: /:year-:month-:day/:title
 layout: post
 title:  "用matlab的bvpc求解器解决最优控制问题（即两点边值问题）"
 author: "Lei Lie"
-categories: Study
+categories: Study,Code
 tag: notdouban
 ---
 

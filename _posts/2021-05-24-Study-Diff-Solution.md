@@ -3,7 +3,7 @@ permalink: /:year-:month-:day/:title
 layout: post
 title:  "用matlab解微分方程"
 author: "Lei Lie"
-categories: Study
+categories: Study,Code
 tag: notdouban
 ---
 

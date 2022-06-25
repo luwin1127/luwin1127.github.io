@@ -3,7 +3,7 @@ permalink: /:year-:month-:day/:title
 layout: post
 title:  "基于AnyLogic搭建多智能体模型验证Lanchester方程线性律和平方律"
 author: "Lei Lie"
-categories: Study
+categories: Study,Code
 tag: notdouban
 ---
 
