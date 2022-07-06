@@ -242,7 +242,7 @@ $$
 
 # 代码
 
-前面给的代码是部分代码，在这里给出[完整代码](../../assets/download/files-2022-06-25/code.zip)。
+前面给的代码是部分代码，在这里给出[完整代码](../../assets/download/files-2022-06-25/gradient-method-for-OCP.zip)。
 
 此代码我做了一些修改，主要有：
 
