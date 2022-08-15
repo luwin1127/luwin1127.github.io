@@ -14,8 +14,8 @@ layout: default
   <nav class="blog__categories">
     <a href="#all" data-category="all" class="category active nav-link"><font face="Times New Roman">{{ site.theme_setting.lang.category_all | default: "Blogs" }}</font></a>
     {%- for category in site.categories %}
-      <!-- 下面这行代码用于隐藏category为Dairy的导航 -->
-      {%- if category[0] != 'Dairy' and category[0] != 'Study,Code'-%}
+      <!-- 下面这行代码用于隐藏category为Diary的导航 -->
+      {%- if category[0] != 'Diary' and category[0] != 'Study,Code'-%}
       <a href="#{{ category[0] }}" class="category nav-link" data-category="{{ category[0] }}"><font face="Times New Roman">{{ category[0] }}</font></a>
       {%- endif -%}
     {%- endfor %}
