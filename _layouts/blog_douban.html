@@ -54,7 +54,7 @@ layout: default
           <li class="post__list_item" data-category="{{ post.categories | join: ';' }}" {% if post.img %}data-img="{{ post.img | img_url_prefix }}"{% endif %}>
             <a href="{{ post.url | relative_url }}">
               <span class="archive__time"><font face="Times New Roman">{{ post.date | date: "%Y-%m-%d" }}</font></span>
-              <span class="archive__title"><font face="华文中宋">{{ post.title }}</font></span>
+              <span class="archive__title"><font face="华文宋体">{{ post.title }}</font></span>
             </a>
           </li>
         {% endif %}
