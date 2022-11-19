@@ -3,7 +3,7 @@ permalink: /:year-:month-:day/:title
 layout: post
 title:  "一个信号博弈模型的解法"
 author: "Lei Lie"
-categories: Study,Code
+categories: Study
 tag: notdouban
 ---
 
