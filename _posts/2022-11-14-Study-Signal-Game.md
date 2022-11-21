@@ -6,6 +6,9 @@ author: "Lei Lie"
 categories: Study
 tag: notdouban
 ---
+题目在这里：[【北大光华金融硕士考研·微观】不完全信息动态博弈及其代表性经典真题（上）](https://www.bilibili.com/video/BV1kE411Z7Cy/?spm_id_from=333.999.0.0&vd_source=8e627fae0adfd5973010c45d6eb79fbe)
+
+因为研究中要用到不完全信息动态博弈，所以研究了一下它，在B站上面找到了一个考研题针对不完全信息动态博弈的信号博弈模型进行求解，看完之后我记录下了自己的解题思考，防止自己忘记。
 
 # 【例】厂商进入的信号博弈
 
