@@ -27,11 +27,11 @@ tag: notdouban
 
 # 关于错失恐惧
 
-![img1](../images/img-2023-02-17/img1.webp)
+![img1](../../images/img-2023-02-17/img1.webp)
 
-![img2](../images/img-2023-02-17/img2.webp)
+![img2](../../images/img-2023-02-17/img2.webp)
 
-![img3](../images/img-2023-02-17/img3.webp)
+![img3](../../images/img-2023-02-17/img3.webp)
 
 其实我也有很多时候充满了错失恐惧，比如说不跟实验室同学吃饭会怎么样，不看微信消息会怎么样，觉得自己一定会错过什么。后来觉得吧，错过就错过吧，那也不是我的缘分，缘分不在这里，也没有办法。
 
