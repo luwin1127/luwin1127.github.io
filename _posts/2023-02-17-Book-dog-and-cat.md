@@ -1,5 +1,5 @@
 ---
-permalink: douban/:year-:month-:day/:title
+permalink: /:year-:month-:day/:title
 layout: post
 title:  "猫和狗的生活哲学：接纳自己，坦诚相待"
 author: "Lei Lie"

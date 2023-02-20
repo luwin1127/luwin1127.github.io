@@ -1,5 +1,5 @@
 ---
-permalink: douban/:year-:month-:day/:title
+permalink: /:year-:month-:day/:title
 layout: post
 title:  "塞尔达传说游戏历史介绍"
 author: "Lei Lie"
