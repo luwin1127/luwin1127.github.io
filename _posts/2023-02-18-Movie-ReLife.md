@@ -4,7 +4,7 @@ layout: post
 title:  "ReLife：爱是想触碰又收回手"
 author: "Lei Lie"
 categories: Essay
-tag: notdouban
+tag: douban
 ---
 
 看完ReLife后我脑海里面第一个念头是这句话：

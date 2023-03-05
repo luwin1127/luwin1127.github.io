@@ -4,7 +4,7 @@ layout: post
 title:  "塞尔达传说游戏历史介绍"
 author: "Lei Lie"
 categories: Diary
-tag: notdouban
+tag: douban
 ---
 
 《塞尔达传说:王国之泪》马上就要发售了，心里好奇一共有多少款塞尔达，每一款塞尔达究竟说了什么故事，于是搜集了一些资料，总结了所有塞尔达游戏的概况。

@@ -4,7 +4,7 @@ layout: post
 title:  "猫和狗的生活哲学：接纳自己，坦诚相待"
 author: "Lei Lie"
 categories: Essay
-tag: notdouban
+tag: douban
 ---
  
 这本书简单轻松，没有过多的说教，读起来不会令人反感，是一本常看常新的小册子。
