@@ -303,9 +303,39 @@ Abstract：单单就“Abstract”而言，需要设置段前 0.5 行，段后 0
 
 # 二、参考文献
 
-## 2.1 Endnote介绍
+此处教程参考[《手把手教你使用EndNote X9》](https://github.com/wanzhenchn/EndNote_Tutorial_Hand_by_Hand)。
 
-## 2.2 用Endnote在word中插入文献
+感谢作者将自己的教程无私开源至互联网上。
+
+《手把手教你使用EndNote X9》是一份写得十分详细的教程，可能太多人有“太长不看”的习惯，所以这里我会做适当舍取，把必要的EndNote知识写下来，如果想看详细版本。可以下载这篇教程学习。
+
+## 2.1 EndNote介绍
+
+EndNote主要有两个功能：
+
+1. 文献管理
+2. 论文撰写
+
+教程里主要讲的是论文撰写中如何使用EndNote。至于如何在EndNote里面管理文献，请见《手把手教你使用EndNote X9》。而且日常学习过程中，用EndNote来管理文献的过程不复杂。在这里简述一下。
+
+首先，新建个人文献库（.enl）文件；
+
+然后，在.enl文件中导入文献。
+
+这里需要着重说明的就是导入文献的格式，不同的数据库有不同的导入格式要求。
+
+1. 知网：进入知网检索文献。将要导入进EndNote的文献勾选，点击页面中的“导出与分析”——“导出参考文献”——“EndNote”，点击导出，得到一个.txt文件。进入EndNote中，选择“File”——“Import”——“File"，再选择刚才下载的.txt文件。**注意**，“Import Option”里选择“EndNote import”，这样就可以成功导入来自知网的文献。接下来的数据库也是同样操作，要注意的就是“Import Option”要选择正确。
+2. Web of Science：在WOS中下载的EndNote文献文件为.ciw格式。此类文件可直接双击即可导入EndNote中，或点击“File”——“Import”——“File"，“Import Option”选择“ISE-CE”格式即可导入EndNote中。
+3. Engineering Village：在EV中下载的EndNote文献文件为.ris格式。此类文件需要点击“File”——“Import”——“File"，“Import Option”选择“Reference Manager (RIS)”格式即可导入EndNote中。
+4. Science Direct：与Engineering Village相同。
+5. IET Electronic Library (IEL)：即IEEE。与Engineering Village相同。
+6. Google Scholar：在Google Scholar中下载的EndNote文献文件为.txt格式。所以导入时，“Import Option”选择“EndNote Import”即可成功导入文献。
+7. 百度学术：与Google Scholar相同。
+8. 万方、维普：与知网相同。
+
+## 2.2 用EndNote在word中插入文献
+
+这里
 
 ## 2.3 设置文献风格
 
