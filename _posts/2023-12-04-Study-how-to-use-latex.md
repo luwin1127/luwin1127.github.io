@@ -229,13 +229,13 @@ tag: notdouban
 ```latex
 \begin{equation}
 	\label{eq:your_label}
-	r=a(1-sinθ)
+	r=a(1-\sin \theta)
 \end{equation}
 ```
 
 上面的公式写出来是这样子。
 $$
-r=a(1-sinθ)
+r=a(1-\sin \theta)
 $$
 从上往下讲解。
 
