@@ -253,9 +253,9 @@ class Agent(object):
 if __name__ == '__main__':
     env = Maze()                                # 环境
     agent = Agent()                             # 个体（智能体）
-    # agent.learn(env, episode=1000, epsilon=0.5)  # 先学习
-    # agent.save_policy()                         # 保存策略
-    # agent.load_policy()                         # 导入策略
+    agent.learn(env, episode=1000, epsilon=0.5) # 先学习
+    agent.save_policy()                         # 保存策略
+    agent.load_policy()                         # 导入策略
     agent.play(env)                             # 再玩耍
  
     # env.after(0, agent.learn, env, 1000, 0.8) # 先学
