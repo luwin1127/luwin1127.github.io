@@ -1,6 +1,6 @@
 # Site settings
 title:          雷烈
-description:    "往来皆过客，挥别笑留名。"
+description:    "博士生活的碎碎念，记录科研的日常。"
 url:            https://github.com/luwin1127/luwin1127.github.io
 # Author
 author:
@@ -35,7 +35,9 @@ related_posts_section:
 social:
   email: lordofdapanji@foxmail.com
   github: luwin1127
-  rss: leilie.top/feed.xml
+
+# The RSS link  
+rss: "leilie.top/feed.xml"
 
 # The followings are settings for displays of your blog.
 theme_setting:
