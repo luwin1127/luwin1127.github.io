@@ -52,7 +52,7 @@ Typst可以在官网的app（[https://typst.app/](https://typst.app/)）上写�
 
 找到`Releases`，点进去。
 
-![找到Releases、](./../images/img-2024-03-25/找到Releases.jpg)
+![找到Releases](./../images/img-2024-03-25/找到Releases.jpg)
 
 点进去之后往下拉，看见`Assets`，选择`typst-x86_64-pc-windows-msvc.zip`，点击下载。
 
