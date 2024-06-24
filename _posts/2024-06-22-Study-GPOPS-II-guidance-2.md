@@ -1,7 +1,7 @@
 ---
 permalink: /:year-:month-:day/:title
 layout: post
-title:  "GPOPS-II教程(2): 航天器最优控制问题"
+title:  "GPOPS-II教程(2): 可复用火箭再入大气层最优轨迹规划问题"
 author: "Lei Lie"
 categories: Essay
 tag: notdouban
@@ -9,371 +9,526 @@ tag: notdouban
 
 # 问题描述
 
-例子出自论文 *Direct solution of nonlinear optimal control problems using quasilinearization and Chebyshev polynomials*（DOI：10.1016/S0016-0032(02)00028-5） Section 5.2. Example 2: Rigid asymmetric spacecraft
-
-题目如下：
-
-一个刚体非对称航天器控制问题，其状态方程为
+考虑一类可复用火箭再入大气层最优轨迹规划问题，其动力学方程为
 
 $$
-\left \{ \begin{matrix}
-    \dot{\omega}_1 = -\frac{I_3-I_2}{I_1} \omega_2 \omega_3 + \frac{u_1}{I_1},  \\
-    \dot{\omega}_2 = -\frac{I_1-I_3}{I_2} \omega_1 \omega_3 + \frac{u_2}{I_2},  \\
-    \dot{\omega}_3 = -\frac{I_2-I_1}{I_3} \omega_1 \omega_2 + \frac{u_3}{I_3},
-\end{matrix}
-\right.
-\tag{1}
-$$
-
-式中，$\omega_1$、$\omega_2$ 和 $\omega_3$ 为航天器的角速度。
-
-控制量为 $u_1$、$u_2$、$u_3$，目标函数为
-
-$$
-J = 0.5 \int_{0}^{100}(u_1^2+u_2^2+u_3^2) \text{d}t.
-\tag{2}
-$$
-
-其余参数为
-
-$$
+\left \{
 \begin{aligned}
-    &\omega_1(0)=0.01 \ \text{r/s},\ \omega_2(0)=0.005 \ \text{r/s},\ \omega_3(0)=0.001 \ \text{r/s},    \\
-    &\omega_1(t_f)=\omega_2(t_f)=\omega_3(t_f)=0 \ \text{r/s},  \\
-    &I_1=86.24 \ \text{kg m}^2,\ I_2=85.07 \ \text{kg m}^2,\ I_3=113.59 \ \text{kg m}^2.
-\end{aligned}
-\tag{3}
+       &\dot r = v \sin \gamma,  \\
+       &\dot \theta = \frac{v \cos \gamma \sin \psi}{r \cos \phi}, \\
+       &\dot \phi = \frac{v \cos \gamma \cos \psi}{r}, \\
+       &\dot v = - \frac{F_d}{m}-F_g \sin \gamma, \\
+       &\dot \gamma = \frac{F_l \cos \sigma}{m v} - (\frac{F_g}{v} - \frac{v}{r}) \cos \gamma, \\
+       &\dot \psi = \frac{F_l \sin \sigma}{m v \cos \gamma} + \frac{v \cos r \sin \psi \tan \phi}{r},
+\end{aligned} \right .
 $$
+
+边界条件为
+
+$$
+\left \{
+\begin{array}{lcl}
+       r(0) = 79248 + R_e \ \text{m}\ &,\ &r(t_f) = 79248 + R_e \ \text{m}, \\
+       \theta(0) = 0 \ \text{deg}\ &,\ & \theta(t_f) = \text{Free}, \\
+       \phi(0) = 0 \ \text{deg}\ &,\ & \phi(t_f) = \text{Free}, \\
+       v(0) = 7803 \ \text{m/s}\ &,\ & v(t_f) = 762 \ \text{m/s}, \\
+       \gamma(0) = -1 \ \text{deg}\ &,\ & \gamma(t_f) = -5 \ \text{deg}, \\
+       \psi(0) = 90 \ \text{deg}\ &,\ & \psi(t_f) = \text{Free}.
+\end{array} \right.
+$$
+
+性能指标为
+
+$$
+J = -\phi(t_f).
+$$
+
+> 参考文献： [1] Betts J T. Practical methods for optimal control and estimation using nonlinear programming[M]. Society for Industrial and Applied Mathematics, 247-252, 2010.
 
 # GPOPS代码
 
 ## `main function`
 
-首先设置GPOPS-II的参数。式$(3)$给出了所有用到的参数，按照式$(3)$写出代码即可。
+虽然这个最优控制问题很复杂，不过不要着急，心里要有一个顺序，按照顺序一步一步写下去就行。
+
+按照我的习惯，`main function`一般分成6个步骤，分别是：
+
+1. 初始参数设置；
+2. 边界条件设置；
+3. 初值猜测；
+4. 设置GPOPS求解器参数；
+5. 求解；
+6. 画图。
+
+那么，一步一步地来写代码吧。
+
+### 1. 初始参数设置
 
 ```matlab
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% 功能描述：刚体非对称航天器控制问题
-% 文件名解释：mainSpacecraftOCP.m 中，main 代表 主函数，
-%             Spacecraft 代表 航天器，
-%             OCP 代表 最优控制问题
-% 作者：Lei Lie
-% 时间：2024/06/22
-% 版本：1.0
-% - 完成了代码框架的初始搭建
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-clc;clear;close all;
-tic;
 %% 01.初始参数设置
 %-------------------------------------------------------------------------%
 %----------------------- 设置问题的求解边界 ------------------------------%
 %-------------------------------------------------------------------------%
-% 设置时间
-t0 = 0;
-tf = 100;
-% 设置状态量初值
-w10 = .01;
-w20 = .005;
-w30 = .001;
-% 设置状态量边界条件
-w1_max = 1;
-w1_min = 0;
-w2_max = 1;
-w2_min = 0;
-w3_max = 1;
-w3_min = 0;
-% 设置控制量初值
-u10 = -.009;
-u20 = -.004;
-u30 = -.001;
-% 设置控制量边界条件
-u1_max = 0;
-u1_min = -.01;
-u2_max = 0;
-u2_min = -.01;
-u3_max = 0;
-u3_min = -.01;
-% 设置静态参数
-auxdata.I1 = 86.24;
-auxdata.I2 = 85.07;
-auxdata.I3 = 113.59;
-% 设置不等式约束边界条件（路径约束）
-path_max = .002;
-path_min = 0;
+cft2m = 0.3048;
+cft2km = cft2m/1000;
+cslug2kg = 14.5939029;
+%-------------------------------------%
+%             Problem Setup           %
+%-------------------------------------%
+auxdata.Re = 20902900*cft2m;              % Equatorial Radius of Earth (m)
+auxdata.S  = 2690*cft2m^2;                % Vehicle Reference Area (m^2)
+auxdata.cl(1) = -0.2070;                  % Parameters for lift coefficient
+auxdata.cl(2) = 1.6756;       
+auxdata.cd(1) = 0.0785;       
+auxdata.cd(2) = -0.3529;       
+auxdata.cd(3) = 2.0400;
+auxdata.b(1)  = 0.07854;      
+auxdata.b(2)  = -0.061592;    
+auxdata.b(3)  = 0.00621408;
+auxdata.H     = 23800*cft2m;              % Density Scale Height (m)
+auxdata.al(1) = -0.20704;    
+auxdata.al(2) = 0.029244;
+auxdata.rho0  = 0.002378*cslug2kg/cft2m^3;% Sea Level Atmospheric Density (slug/ft^3)
+auxdata.mu    = 1.4076539e16*cft2m^3;     % Earth Gravitational Parameter (ft^^3/s^2) 
+auxdata.mass  = 6309.433*cslug2kg;      
 
-%% 02.边界条件设置
+% 初始条件
+t0 = 0;
+alt0 = 260000*cft2m;
+rad0 = alt0+auxdata.Re;
+lon0 = 0;
+lat0 = 0;
+speed0 = 25600*cft2m;
+fpa0   = -1*pi/180;
+azi0   = 90*pi/180;
+
+% 终端条件
+altf = 80000*cft2m;
+radf = altf+auxdata.Re;
+speedf = 2500*cft2m;
+fpaf   = -5*pi/180;
+azif   = -90*pi/180;
+
+%----------------------------------------------------%
+% 时间、状态和控制量的上界和下界
+%----------------------------------------------------%
+tfMin = 0;            tfMax = 3000;
+radMin = auxdata.Re;  radMax = rad0;
+lonMin = -pi;         lonMax = -lonMin;
+latMin = -70*pi/180;  latMax = -latMin;
+speedMin = 10;        speedMax = 45000;
+fpaMin = -80*pi/180;  fpaMax =  80*pi/180;
+aziMin = -180*pi/180; aziMax =  180*pi/180;
+aoaMin = -90*pi/180;  aoaMax = -aoaMin;
+bankMin = -90*pi/180; bankMax =   1*pi/180;
+```
+
+### 2. 边界条件设置
+
+```matlab
 %-------------------------------------------------------------------------%
 %------------------------ 将求解边界设置于问题中 -------------------------%
 %-------------------------------------------------------------------------%
-bounds.phase.initialtime.lower  = t0; 
-bounds.phase.initialtime.upper  = t0;
-bounds.phase.finaltime.lower    = tf; 
-bounds.phase.finaltime.upper    = tf;
-bounds.phase.initialstate.lower = [w10 w20 w30]; 
-bounds.phase.initialstate.upper = [w10 w20 w30];
-bounds.phase.state.lower        = [w1_min w2_min w3_min]; 
-bounds.phase.state.upper        = [w1_max w2_max w3_max];
-bounds.phase.finalstate.lower   = [0 0 0];
-bounds.phase.finalstate.upper   = [0 0 0];
-bounds.phase.control.lower      = [u1_min u2_min u3_min]; 
-bounds.phase.control.upper      = [u1_max u2_max u3_max];
-bounds.phase.integral.lower     = 0; 
-bounds.phase.integral.upper     = 10000;
+bounds.phase.initialtime.lower = t0;
+bounds.phase.initialtime.upper = t0;
+bounds.phase.finaltime.lower = tfMin;
+bounds.phase.finaltime.upper = tfMax;
+bounds.phase.initialstate.lower = [rad0, lon0, lat0, speed0, fpa0, azi0];
+bounds.phase.initialstate.upper = [rad0, lon0, lat0, speed0, fpa0, azi0];
+bounds.phase.state.lower = [radMin, lonMin, latMin, speedMin, fpaMin, aziMin];
+bounds.phase.state.upper = [radMax, lonMax, latMax, speedMax, fpaMax, aziMax];
+bounds.phase.finalstate.lower = [radf, lonMin, latMin, speedf, fpaf, aziMin];
+bounds.phase.finalstate.upper = [radf, lonMax, latMax, speedf, fpaf, aziMax];
+bounds.phase.control.lower = [aoaMin, bankMin];
+bounds.phase.control.upper = [aoaMax, bankMax];
+```
 
-%% 03.初值猜测
+### 3. 初值猜测
+
+```matlab
 %-------------------------------------------------------------------------%
 %------------------------------- 初值猜想 --------------------------------%
 %-------------------------------------------------------------------------%
-guess.phase.time     = [t0; tf]; 
-guess.phase.state    = [[w10 w20 w30];[0 0 0]];
-guess.phase.control  = [[u10 u20 u30];[u10 u20 u30]];
-guess.phase.integral = 100;
+tGuess = [0; 1000];
+radGuess = [rad0; radf];
+lonGuess = [lon0; lon0+10*pi/180];
+latGuess = [lat0; lat0+10*pi/180];
+speedGuess = [speed0; speedf];
+fpaGuess = [fpa0; fpaf];
+aziGuess = [azi0; azif];
+aoaGuess = [0; 0];
+bankGuess = [0; 0];
 
-%% 04.设置GPOPS求解器参数
+guess.phase.state   = [radGuess, lonGuess, latGuess, speedGuess, fpaGuess, aziGuess];
+guess.phase.control = [aoaGuess, bankGuess];
+guess.phase.time    = tGuess;
+```
+
+### 4. 设置GPOPS求解器参数
+
+```matlab
 %-------------------------------------------------------------------------%
 %---------------------------- 设置求解器参数 -----------------------------%        
 %-------------------------------------------------------------------------%
-setup.name = 'Spacecraft-OCP';
-setup.functions.continuous  = @socpContinuous;
-setup.functions.endpoint   	= @socpEndpoint;
-setup.bounds                = bounds;
-setup.guess                 = guess;
-setup.auxdata               = auxdata;
-setup.nlp.solver            = 'ipopt';
-setup.derivatives.supplier  = 'sparseCD';
-setup.derivatives.derivativelevel = 'second';
-setup.mesh.method           = 'hp1';
-setup.mesh.tolerance        = 1e-6;
-setup.mesh.maxiteration     = 45;
-setup.mesh.colpointsmax     = 4;
-setup.mesh.colpointsmin     = 10;
-setup.mesh.phase.fraction   = 0.1*ones(1,10);
-setup.mesh.phase.colpoints  = 4*ones(1,10);
-setup.method = 'RPMintegration';
+meshphase.colpoints = 4*ones(1,10);
+meshphase.fraction = 0.1*ones(1,10);
 
-%% 05.求解
+setup.name = 'Reusable-Launch-Vehicle-Entry-Problem';
+setup.functions.continuous = @rlvEntryContinuous;
+setup.functions.endpoint   = @rlvEntryEndpoint;
+setup.auxdata = auxdata;
+setup.mesh.phase = meshphase;
+setup.bounds = bounds;
+setup.guess = guess;
+setup.nlp.solver = 'ipopt';
+setup.derivatives.supplier = 'sparseCD';
+setup.derivatives.derivativelevel = 'second';
+setup.scales.method = 'automatic-bounds';
+setup.mesh.method = 'hp1';
+setup.mesh.tolerance = 1e-6;
+setup.mesh.colpointsmin = 4;
+setup.mesh.colpointsmax = 16;
+```
+
+### 5. 求解
+
+```matlab
 %-------------------------------------------------------------------------%
 %----------------------- 使用 GPOPS2 求解最优控制问题 --------------------%
 %-------------------------------------------------------------------------%
 output = gpops2(setup);
 solution = output.result.solution;
 toc;
+
+time = solution.phase(1).time;
+altitude  = (solution.phase(1).state(:,1)-auxdata.Re)/1000;
+longitude = solution.phase(1).state(:,2)*180/pi;
+latitude  = solution.phase(1).state(:,3)*180/pi;
+speed     = solution.phase(1).state(:,4)/1000;
+fpa       = solution.phase(1).state(:,5)*180/pi;
+azimuth   = solution.phase(1).state(:,6)*180/pi;
+aoa       = solution.phase(1).control(:,1)*180/pi;
+bank      = solution.phase(1).control(:,2)*180/pi;
 ```
 
-把结果画出来，代码如下。
+### 6. 画图
 
 ```matlab
-%% 06.画图
-t = solution.phase.time(:,1);
-w1 = solution.phase.state(:,1);
-w2 = solution.phase.state(:,2);
-w3 = solution.phase.state(:,3);
-u1 = solution.phase.control(:,1);
-u2 = solution.phase.control(:,2);
-u3 = solution.phase.control(:,3);
+figure('Color',[1,1,1])
+pp = plot(time,altitude,'-o', 'markersize', 7, 'linewidth', 1.5);
+xl = xlabel('Time (s)');
+yl = ylabel('Altitude (km)');
+title('Altitude');
+set(xl,'FontSize',18);
+set(yl,'FontSize',18);
+set(gca,'FontSize',16,'FontName','Times New Roman');
+set(pp,'LineWidth',1.25);
+print -dpng rlvAltitude.png
 
-figure('Color',[1,1,1]);
-plot(t,w1,'-','LineWidth',1.5);hold on;
-plot(t,w2,'-.','LineWidth',1.5);
-plot(t,w3,'--','LineWidth',1.5);
-xlabel('Time',...
-       'FontWeight','bold');
-ylabel('States',...
-       'FontWeight','bold');
-legend('w1','w2','w3',...
-       'LineWidth',1,...
-       'EdgeColor',[1,1,1],...
-       'Orientation','horizontal',...
-       'Position',[0.5,0.93,0.40,0.055]);
-set(gca,'FontName','Times New Roman',...
-        'FontSize',15,...
-        'LineWidth',1.3);
-print -dpng spacecraft_ocp_state.png
+figure('Color',[1,1,1])
+plot(longitude,latitude,'-o', 'markersize', 7, 'linewidth', 1.5);
+xl = xlabel('Longitude (deg)');
+yl = ylabel('Latitude (deg)');
+title('Longitude and Latitude');
+set(xl,'FontSize',18);
+set(yl,'FontSize',18);
+set(gca,'FontSize',16,'FontName','Times New Roman');
+set(pp,'LineWidth',1.25);
+print -dpng rlvLonLat.png
 
-figure('Color',[1,1,1]);
-plot(t,u1,'-','LineWidth',1.5);hold on;
-plot(t,u2,'-.','LineWidth',1.5);
-plot(t,u3,'--','LineWidth',1.5);
-xlabel('Time',...
-       'FontWeight','bold');
-ylabel('Control',...
-       'FontWeight','bold');
-legend('u1','u2','u3',...
-       'LineWidth',1,...
-       'EdgeColor',[1,1,1],...
-       'Orientation','horizontal',...
-       'Position',[0.5,0.93,0.40,0.055]);
-set(gca,'FontName','Times New Roman',...
-        'FontSize',15,...
-        'LineWidth',1.3);
-print -dpng spacecraft_ocp_control.png
+figure('Color',[1,1,1])
+plot(time,speed,'-o', 'markersize', 7, 'linewidth', 1.5);
+xl = xlabel('Time (s)');
+yl = ylabel('Speed (km/s)');
+title('Speed')
+set(xl,'FontSize',18);
+set(yl,'FontSize',18);
+set(gca,'FontSize',16,'FontName','Times New Roman');
+set(pp,'LineWidth',1.25);
+print -dpng rlvSpeed.png
+
+figure('Color',[1,1,1])
+plot(time,fpa,'-o', 'markersize', 7, 'linewidth', 1.5);
+yl = xlabel('Time (s)');
+xl = ylabel('Flight Path Angle (deg)');
+title('Flight Path Angle')
+set(xl,'FontSize',18);
+set(yl,'FontSize',18);
+set(gca,'FontSize',16,'FontName','Times New Roman');
+set(pp,'LineWidth',1.25);
+print -dpng rlvFlightPathAngle.png
+
+figure('Color',[1,1,1])
+plot(time,azimuth,'-o', 'markersize', 7, 'linewidth', 1.5);
+yl = xlabel('Time (s)');
+xl = ylabel('Azimuth Angle (deg)');
+set(xl,'FontSize',18);
+set(yl,'FontSize',18);
+set(gca,'FontSize',16,'FontName','Times New Roman');
+set(pp,'LineWidth',1.25);
+print -dpng rlvAzimuthAngle.png
+
+figure('Color',[1,1,1])
+plot(time,aoa,'-o', 'markersize', 7, 'linewidth', 1.5);
+yl = xlabel('Time (s)');
+xl = ylabel('Angle of Attack (deg)');
+set(xl,'FontSize',18);
+set(yl,'FontSize',18);
+set(gca,'FontSize',16,'YTick',[16.5 17 17.5],'FontName','Times New Roman');
+set(pp,'LineWidth',1.25);
+print -dpng rlvAngleofAttack.png
+
+figure('Color',[1,1,1])
+plot(time,bank,'-o', 'markersize', 7, 'linewidth', 1.5);
+yl = xlabel('Time (s)');
+xl = ylabel('Bank Angle (deg)');
+set(xl,'FontSize',18);
+set(yl,'FontSize',18);
+set(gca,'FontSize',16,'FontName','Times New Roman');
+set(pp,'LineWidth',1.25);
+print -dpng rlvBankAngle.png
 ```
 
 ## `continuous function`
 
-现在写动力学方程，再把式$(1)$重新写一遍，放在这里。
-$$
-\left \{ \begin{matrix}
-    \dot{\omega}_1 = -\frac{I_3-I_2}{I_1} \omega_2 \omega_3 + \frac{u_1}{I_1},  \\
-    \dot{\omega}_2 = -\frac{I_1-I_3}{I_2} \omega_1 \omega_3 + \frac{u_2}{I_2},  \\
-    \dot{\omega}_3 = -\frac{I_2-I_1}{I_3} \omega_1 \omega_2 + \frac{u_3}{I_3},
-\end{matrix}
-\right.
-$$
-那么在代码中可以这么写：
+写这部分代码的时候分成三步来写。
+
+**第一步**，把所有要用的变量全部导入进来。
 
 ```matlab
-dw1 = -((I3-I2)/I1) .* w2 .* w3 + u1 ./ I1;
-dw2 = -((I1-I3)/I2) .* w1 .* w3 + u2 ./ I2;
-dw3 = -((I2-I1)/I2) .* w1 .* w2 + u3 ./ I3;
+function phaseout = rlvEntryContinuous(input)
+
+rad = input.phase.state(:,1);
+lon = input.phase.state(:,2);
+lat = input.phase.state(:,3);
+speed = input.phase.state(:,4);
+fpa = input.phase.state(:,5);
+azimuth = input.phase.state(:,6);
+aoa = input.phase.control(:,1);
+bank = input.phase.control(:,2);
+
+cd0 = input.auxdata.cd(1);
+cd1 = input.auxdata.cd(2);
+cd2 = input.auxdata.cd(3);
+cl0 = input.auxdata.cl(1);
+cl1 = input.auxdata.cl(2);
+mu  = input.auxdata.mu;
+rho0 = input.auxdata.rho0;
+H = input.auxdata.H;
+S = input.auxdata.S;
+mass = input.auxdata.mass;
+altitude = rad - input.auxdata.Re;
 ```
 
-性能指标的形式为
-$$
-J = 0.5 \int_{0}^{100}(u_1^2+u_2^2+u_3^2) \text{d}t.
-$$
-对应的代码如下。
+**第二步**，计算在求解动力学方程时会用到的变量。
 
 ```matlab
-phaseout.integrand = 0.5*(u1.^2 + u2.^2 + u3.^2);
+CD = cd0+cd1*aoa+cd2*aoa.^2;
+
+rho = rho0*exp(-altitude/H);
+CL = cl0+cl1*aoa;
+gravity = mu./rad.^2;
+dynamic_pressure = 0.5*rho.*speed.^2;
+D = dynamic_pressure.*S.*CD./mass;
+L = dynamic_pressure.*S.*CL./mass;
+slon = sin(lon);
+clon = cos(lon);
+slat = sin(lat);
+clat = cos(lat);
+tlat = tan(lat);
+sfpa = sin(fpa);
+cfpa = cos(fpa);
+sazi = sin(azimuth);
+cazi = cos(azimuth);
+cbank = cos(bank);
+sbank = sin(bank);
 ```
 
-那么，`continues function`的完整代码如下。
+**第三步**，根据动力学方程写出代码。
+
+重新复习一下动力学方程，为
+
+$$
+\left \{
+\begin{aligned}
+       &\dot r = v \sin \gamma,  \\
+       &\dot \theta = \frac{v \cos \gamma \sin \psi}{r \cos \phi}, \\
+       &\dot \phi = \frac{v \cos \gamma \cos \psi}{r}, \\
+       &\dot v = - \frac{F_d}{m}-F_g \sin \gamma, \\
+       &\dot \gamma = \frac{F_l \cos \sigma}{m v} - (\frac{F_g}{v} - \frac{v}{r}) \cos \gamma, \\
+       &\dot \psi = \frac{F_l \sin \sigma}{m v \cos \gamma} + \frac{v \cos r \sin \psi \tan \phi}{r},
+\end{aligned} \right .
+$$
+
+根据动力学方程，就可以对应地写出，代码如下。
 
 ```matlab
-function phaseout = socpContinuous(input)
-    w1 = input.phase.state(:,1);
-    w2 = input.phase.state(:,2);
-    w3 = input.phase.state(:,3);
-    u1 = input.phase.control(:,1);
-    u2 = input.phase.control(:,2);
-    u3 = input.phase.control(:,3);
+raddot   = speed.*sfpa;
+londot   = speed.*cfpa.*sazi./(rad.*clat);
+latdot   = speed.*cfpa.*cazi./rad;
+speeddot = -D-gravity.*sfpa;
+fpadot   = (L.*cbank-cfpa.*(gravity-speed.^2./rad))./speed;
+azidot   = (L.*sbank./cfpa + speed.^2.*cfpa.*sazi.*tlat./rad)./speed;
 
-    I1 = input.auxdata.I1;
-    I2 = input.auxdata.I2;
-    I3 = input.auxdata.I3;
-
-    dw1 = -((I3-I2)/I1) .* w2 .* w3 + u1 ./ I1;
-    dw2 = -((I1-I3)/I2) .* w1 .* w3 + u2 ./ I2;
-    dw3 = -((I2-I1)/I2) .* w1 .* w2 + u3 ./ I3;
-
-    phaseout.dynamics = [dw1 dw2 dw3];
-    phaseout.integrand = 0.5*(u1.^2 + u2.^2 + u3.^2);
+phaseout.dynamics  = [raddot, londot, latdot, speeddot, fpadot, azidot];
 end
 ```
 
 ## `endpoint function`
 
-此处代码很简单，只有2行。
+`endpoint function`按照性能指标函数写即可，性能指标为
+
+$$
+J = -\phi(t_f).
+$$
+
+那么，代码如下。
 
 ```matlab
-function output = socpEndpoint(input)
-    J  = input.phase.integral;
-    output.objective = J;
+% ----------------------------------------------------------------------- %
+% ------------------------ BEGIN: rlvEntryEndpoint.m -------------------- %
+% ----------------------------------------------------------------------- %
+function output = rlvEntryEndpoint(input)
+latf = input.phase.finalstate(3);
+output.objective = -latf;
 end
+% ----------------------------------------------------------------------- %
+% ------------------------- END: rlvEntryEndpoint.m --------------------- %
+% ----------------------------------------------------------------------- %
 ```
 
 ## 完整代码
 
 ```matlab
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% 功能描述：刚体非对称航天器控制问题
-% 文件名解释：mainSpacecraftOCP.m 中，main 代表 主函数，
-%             Spacecraft 代表 航天器，
-%             OCP 代表 最优控制问题
+% 功能描述：可复用火箭再入大气层最优轨迹规划问题
+% 文件名解释：mainReentry.m 中，main 代表 主函数，
+%             Re-entry 代表 再入航天器
 % 作者：Lei Lie
-% 时间：2024/06/22
+% 时间：2024/06/24
 % 版本：1.0
 % - 完成了代码框架的初始搭建
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-clc;clear;close all;
+clc;
+clear;
+close all;
 tic;
 %% 01.初始参数设置
 %-------------------------------------------------------------------------%
 %----------------------- 设置问题的求解边界 ------------------------------%
 %-------------------------------------------------------------------------%
-% 设置时间
+cft2m = 0.3048;
+cft2km = cft2m/1000;
+cslug2kg = 14.5939029;
+%-------------------------------------%
+%             Problem Setup           %
+%-------------------------------------%
+auxdata.Re = 20902900*cft2m;              % Equatorial Radius of Earth (m)
+auxdata.S  = 2690*cft2m^2;                % Vehicle Reference Area (m^2)
+auxdata.cl(1) = -0.2070;                  % Parameters for lift coefficient
+auxdata.cl(2) = 1.6756;       
+auxdata.cd(1) = 0.0785;       
+auxdata.cd(2) = -0.3529;       
+auxdata.cd(3) = 2.0400;
+auxdata.b(1)  = 0.07854;      
+auxdata.b(2)  = -0.061592;    
+auxdata.b(3)  = 0.00621408;
+auxdata.H     = 23800*cft2m;              % Density Scale Height (m)
+auxdata.al(1) = -0.20704;    
+auxdata.al(2) = 0.029244;
+auxdata.rho0  = 0.002378*cslug2kg/cft2m^3;% Sea Level Atmospheric Density (slug/ft^3)
+auxdata.mu    = 1.4076539e16*cft2m^3;     % Earth Gravitational Parameter (ft^^3/s^2) 
+auxdata.mass  = 6309.433*cslug2kg;      
+
+% 初始条件
 t0 = 0;
-tf = 100;
-% 设置状态量初值
-w10 = .01;
-w20 = .005;
-w30 = .001;
-% 设置状态量边界条件
-w1_max = 1;
-w1_min = 0;
-w2_max = 1;
-w2_min = 0;
-w3_max = 1;
-w3_min = 0;
-% 设置控制量初值
-u10 = -.009;
-u20 = -.004;
-u30 = -.001;
-% 设置控制量边界条件
-u1_max = 0;
-u1_min = -.01;
-u2_max = 0;
-u2_min = -.01;
-u3_max = 0;
-u3_min = -.01;
-% 设置静态参数
-auxdata.I1 = 86.24;
-auxdata.I2 = 85.07;
-auxdata.I3 = 113.59;
-% 设置不等式约束边界条件（路径约束）
-path_max = .002;
-path_min = 0;
+alt0 = 260000*cft2m;
+rad0 = alt0+auxdata.Re;
+lon0 = 0;
+lat0 = 0;
+speed0 = 25600*cft2m;
+fpa0   = -1*pi/180;
+azi0   = 90*pi/180;
+
+% 终端条件
+altf = 80000*cft2m;
+radf = altf+auxdata.Re;
+speedf = 2500*cft2m;
+fpaf   = -5*pi/180;
+azif   = -90*pi/180;
+
+%----------------------------------------------------%
+% 时间、状态和控制量的上界和下界
+%----------------------------------------------------%
+tfMin = 0;            tfMax = 3000;
+radMin = auxdata.Re;  radMax = rad0;
+lonMin = -pi;         lonMax = -lonMin;
+latMin = -70*pi/180;  latMax = -latMin;
+speedMin = 10;        speedMax = 45000;
+fpaMin = -80*pi/180;  fpaMax =  80*pi/180;
+aziMin = -180*pi/180; aziMax =  180*pi/180;
+aoaMin = -90*pi/180;  aoaMax = -aoaMin;
+bankMin = -90*pi/180; bankMax =   1*pi/180;
 
 %% 02.边界条件设置
 %-------------------------------------------------------------------------%
 %------------------------ 将求解边界设置于问题中 -------------------------%
 %-------------------------------------------------------------------------%
-bounds.phase.initialtime.lower  = t0; 
-bounds.phase.initialtime.upper  = t0;
-bounds.phase.finaltime.lower    = tf; 
-bounds.phase.finaltime.upper    = tf;
-bounds.phase.initialstate.lower = [w10 w20 w30]; 
-bounds.phase.initialstate.upper = [w10 w20 w30];
-bounds.phase.state.lower        = [w1_min w2_min w3_min]; 
-bounds.phase.state.upper        = [w1_max w2_max w3_max];
-bounds.phase.finalstate.lower   = [0 0 0];
-bounds.phase.finalstate.upper   = [0 0 0];
-bounds.phase.control.lower      = [u1_min u2_min u3_min]; 
-bounds.phase.control.upper      = [u1_max u2_max u3_max];
-bounds.phase.integral.lower     = 0; 
-bounds.phase.integral.upper     = 10000;
+bounds.phase.initialtime.lower = t0;
+bounds.phase.initialtime.upper = t0;
+bounds.phase.finaltime.lower = tfMin;
+bounds.phase.finaltime.upper = tfMax;
+bounds.phase.initialstate.lower = [rad0, lon0, lat0, speed0, fpa0, azi0];
+bounds.phase.initialstate.upper = [rad0, lon0, lat0, speed0, fpa0, azi0];
+bounds.phase.state.lower = [radMin, lonMin, latMin, speedMin, fpaMin, aziMin];
+bounds.phase.state.upper = [radMax, lonMax, latMax, speedMax, fpaMax, aziMax];
+bounds.phase.finalstate.lower = [radf, lonMin, latMin, speedf, fpaf, aziMin];
+bounds.phase.finalstate.upper = [radf, lonMax, latMax, speedf, fpaf, aziMax];
+bounds.phase.control.lower = [aoaMin, bankMin];
+bounds.phase.control.upper = [aoaMax, bankMax];
 
 %% 03.初值猜测
 %-------------------------------------------------------------------------%
 %------------------------------- 初值猜想 --------------------------------%
 %-------------------------------------------------------------------------%
-guess.phase.time     = [t0; tf]; 
-guess.phase.state    = [[w10 w20 w30];[0 0 0]];
-guess.phase.control  = [[u10 u20 u30];[u10 u20 u30]];
-guess.phase.integral = 100;
+tGuess = [0; 1000];
+radGuess = [rad0; radf];
+lonGuess = [lon0; lon0+10*pi/180];
+latGuess = [lat0; lat0+10*pi/180];
+speedGuess = [speed0; speedf];
+fpaGuess = [fpa0; fpaf];
+aziGuess = [azi0; azif];
+aoaGuess = [0; 0];
+bankGuess = [0; 0];
+
+guess.phase.state   = [radGuess, lonGuess, latGuess, speedGuess, fpaGuess, aziGuess];
+guess.phase.control = [aoaGuess, bankGuess];
+guess.phase.time    = tGuess;
+
 
 %% 04.设置GPOPS求解器参数
 %-------------------------------------------------------------------------%
 %---------------------------- 设置求解器参数 -----------------------------%        
 %-------------------------------------------------------------------------%
-setup.name = 'Spacecraft-OCP';
-setup.functions.continuous  = @socpContinuous;
-setup.functions.endpoint   	= @socpEndpoint;
-setup.bounds                = bounds;
-setup.guess                 = guess;
-setup.auxdata               = auxdata;
-setup.nlp.solver            = 'ipopt';
-setup.derivatives.supplier  = 'sparseCD';
+meshphase.colpoints = 4*ones(1,10);
+meshphase.fraction = 0.1*ones(1,10);
+
+setup.name = 'Reusable-Launch-Vehicle-Entry-Problem';
+setup.functions.continuous = @rlvEntryContinuous;
+setup.functions.endpoint   = @rlvEntryEndpoint;
+setup.auxdata = auxdata;
+setup.mesh.phase = meshphase;
+setup.bounds = bounds;
+setup.guess = guess;
+setup.nlp.solver = 'ipopt';
+setup.derivatives.supplier = 'sparseCD';
 setup.derivatives.derivativelevel = 'second';
-setup.mesh.method           = 'hp1';
-setup.mesh.tolerance        = 1e-6;
-setup.mesh.maxiteration     = 45;
-setup.mesh.colpointsmax     = 4;
-setup.mesh.colpointsmin     = 10;
-setup.mesh.phase.fraction   = 0.1*ones(1,10);
-setup.mesh.phase.colpoints  = 4*ones(1,10);
-setup.method = 'RPMintegration';
+setup.scales.method = 'automatic-bounds';
+setup.mesh.method = 'hp1';
+setup.mesh.tolerance = 1e-6;
+setup.mesh.colpointsmin = 4;
+setup.mesh.colpointsmax = 16;
+
 
 %% 05.求解
 %-------------------------------------------------------------------------%
@@ -383,112 +538,204 @@ output = gpops2(setup);
 solution = output.result.solution;
 toc;
 
+time = solution.phase(1).time;
+altitude  = (solution.phase(1).state(:,1)-auxdata.Re)/1000;
+longitude = solution.phase(1).state(:,2)*180/pi;
+latitude  = solution.phase(1).state(:,3)*180/pi;
+speed     = solution.phase(1).state(:,4)/1000;
+fpa       = solution.phase(1).state(:,5)*180/pi;
+azimuth   = solution.phase(1).state(:,6)*180/pi;
+aoa       = solution.phase(1).control(:,1)*180/pi;
+bank      = solution.phase(1).control(:,2)*180/pi;
+
 %% 06.画图
-t = solution.phase.time(:,1);
-w1 = solution.phase.state(:,1);
-w2 = solution.phase.state(:,2);
-w3 = solution.phase.state(:,3);
-u1 = solution.phase.control(:,1);
-u2 = solution.phase.control(:,2);
-u3 = solution.phase.control(:,3);
 
-figure('Color',[1,1,1]);
-plot(t,w1,'-','LineWidth',1.5);hold on;
-plot(t,w2,'-.','LineWidth',1.5);
-plot(t,w3,'--','LineWidth',1.5);
-xlabel('Time',...
-       'FontWeight','bold');
-ylabel('States',...
-       'FontWeight','bold');
-legend('w1','w2','w3',...
-       'LineWidth',1,...
-       'EdgeColor',[1,1,1],...
-       'Orientation','horizontal',...
-       'Position',[0.5,0.93,0.40,0.055]);
-set(gca,'FontName','Times New Roman',...
-        'FontSize',15,...
-        'LineWidth',1.3);
-print -dpng spacecraft_ocp_state.png
+figure('Color',[1,1,1])
+pp = plot(time,altitude,'-o', 'markersize', 7, 'linewidth', 1.5);
+xl = xlabel('Time (s)');
+yl = ylabel('Altitude (km)');
+title('Altitude');
+set(xl,'FontSize',18);
+set(yl,'FontSize',18);
+set(gca,'FontSize',16,'FontName','Times New Roman');
+set(pp,'LineWidth',1.25);
+print -dpng rlvAltitude.png
 
-figure('Color',[1,1,1]);
-plot(t,u1,'-','LineWidth',1.5);hold on;
-plot(t,u2,'-.','LineWidth',1.5);
-plot(t,u3,'--','LineWidth',1.5);
-xlabel('Time',...
-       'FontWeight','bold');
-ylabel('Control',...
-       'FontWeight','bold');
-legend('u1','u2','u3',...
-       'LineWidth',1,...
-       'EdgeColor',[1,1,1],...
-       'Orientation','horizontal',...
-       'Position',[0.5,0.93,0.40,0.055]);
-set(gca,'FontName','Times New Roman',...
-        'FontSize',15,...
-        'LineWidth',1.3);
-print -dpng spacecraft_ocp_control.png
+figure('Color',[1,1,1])
+plot(longitude,latitude,'-o', 'markersize', 7, 'linewidth', 1.5);
+xl = xlabel('Longitude (deg)');
+yl = ylabel('Latitude (deg)');
+title('Longitude and Latitude');
+set(xl,'FontSize',18);
+set(yl,'FontSize',18);
+set(gca,'FontSize',16,'FontName','Times New Roman');
+set(pp,'LineWidth',1.25);
+print -dpng rlvLonLat.png
+
+figure('Color',[1,1,1])
+plot(time,speed,'-o', 'markersize', 7, 'linewidth', 1.5);
+xl = xlabel('Time (s)');
+yl = ylabel('Speed (km/s)');
+title('Speed')
+set(xl,'FontSize',18);
+set(yl,'FontSize',18);
+set(gca,'FontSize',16,'FontName','Times New Roman');
+set(pp,'LineWidth',1.25);
+print -dpng rlvSpeed.png
+
+figure('Color',[1,1,1])
+plot(time,fpa,'-o', 'markersize', 7, 'linewidth', 1.5);
+yl = xlabel('Time (s)');
+xl = ylabel('Flight Path Angle (deg)');
+title('Flight Path Angle')
+set(xl,'FontSize',18);
+set(yl,'FontSize',18);
+set(gca,'FontSize',16,'FontName','Times New Roman');
+set(pp,'LineWidth',1.25);
+print -dpng rlvFlightPathAngle.png
+
+figure('Color',[1,1,1])
+plot(time,azimuth,'-o', 'markersize', 7, 'linewidth', 1.5);
+yl = xlabel('Time (s)');
+xl = ylabel('Azimuth Angle (deg)');
+set(xl,'FontSize',18);
+set(yl,'FontSize',18);
+set(gca,'FontSize',16,'FontName','Times New Roman');
+set(pp,'LineWidth',1.25);
+print -dpng rlvAzimuthAngle.png
+
+figure('Color',[1,1,1])
+plot(time,aoa,'-o', 'markersize', 7, 'linewidth', 1.5);
+yl = xlabel('Time (s)');
+xl = ylabel('Angle of Attack (deg)');
+set(xl,'FontSize',18);
+set(yl,'FontSize',18);
+set(gca,'FontSize',16,'YTick',[16.5 17 17.5],'FontName','Times New Roman');
+set(pp,'LineWidth',1.25);
+print -dpng rlvAngleofAttack.png
+
+figure('Color',[1,1,1])
+plot(time,bank,'-o', 'markersize', 7, 'linewidth', 1.5);
+yl = xlabel('Time (s)');
+xl = ylabel('Bank Angle (deg)');
+set(xl,'FontSize',18);
+set(yl,'FontSize',18);
+set(gca,'FontSize',16,'FontName','Times New Roman');
+set(pp,'LineWidth',1.25);
+print -dpng rlvBankAngle.png
 
 %% 函数模块部分
 % ----------------------------------------------------------------------- %
-% ------------------------- BEGIN: vsopcContinuous.m -------------------- %
+% ----------------------- BEGIN: rlvEntryContinuous.m ------------------- %
 % ----------------------------------------------------------------------- %
-function phaseout = socpContinuous(input)
-    w1 = input.phase.state(:,1);
-    w2 = input.phase.state(:,2);
-    w3 = input.phase.state(:,3);
-    u1 = input.phase.control(:,1);
-    u2 = input.phase.control(:,2);
-    u3 = input.phase.control(:,3);
+function phaseout = rlvEntryContinuous(input)
 
-    I1 = input.auxdata.I1;
-    I2 = input.auxdata.I2;
-    I3 = input.auxdata.I3;
+rad = input.phase.state(:,1);
+lon = input.phase.state(:,2);
+lat = input.phase.state(:,3);
+speed = input.phase.state(:,4);
+fpa = input.phase.state(:,5);
+azimuth = input.phase.state(:,6);
+aoa = input.phase.control(:,1);
+bank = input.phase.control(:,2);
 
-    dw1 = -((I3-I2)/I1) .* w2 .* w3 + u1 ./ I1;
-    dw2 = -((I1-I3)/I2) .* w1 .* w3 + u2 ./ I2;
-    dw3 = -((I2-I1)/I2) .* w1 .* w2 + u3 ./ I3;
+cd0 = input.auxdata.cd(1);
+cd1 = input.auxdata.cd(2);
+cd2 = input.auxdata.cd(3);
+cl0 = input.auxdata.cl(1);
+cl1 = input.auxdata.cl(2);
+mu  = input.auxdata.mu;
+rho0 = input.auxdata.rho0;
+H = input.auxdata.H;
+S = input.auxdata.S;
+mass = input.auxdata.mass;
+altitude = rad - input.auxdata.Re;
 
-    phaseout.dynamics = [dw1 dw2 dw3];
-    phaseout.integrand = 0.5*(u1.^2 + u2.^2 + u3.^2);
+CD = cd0+cd1*aoa+cd2*aoa.^2;
+
+rho = rho0*exp(-altitude/H);
+CL = cl0+cl1*aoa;
+gravity = mu./rad.^2;
+dynamic_pressure = 0.5*rho.*speed.^2;
+D = dynamic_pressure.*S.*CD./mass;
+L = dynamic_pressure.*S.*CL./mass;
+slon = sin(lon);
+clon = cos(lon);
+slat = sin(lat);
+clat = cos(lat);
+tlat = tan(lat);
+sfpa = sin(fpa);
+cfpa = cos(fpa);
+sazi = sin(azimuth);
+cazi = cos(azimuth);
+cbank = cos(bank);
+sbank = sin(bank);
+
+raddot   = speed.*sfpa;
+londot   = speed.*cfpa.*sazi./(rad.*clat);
+latdot   = speed.*cfpa.*cazi./rad;
+speeddot = -D-gravity.*sfpa;
+fpadot   = (L.*cbank-cfpa.*(gravity-speed.^2./rad))./speed;
+azidot   = (L.*sbank./cfpa + speed.^2.*cfpa.*sazi.*tlat./rad)./speed;
+
+phaseout.dynamics  = [raddot, londot, latdot, speeddot, fpadot, azidot];
 end
 % ----------------------------------------------------------------------- %
-% -------------------------- END: vsopcContinuous.m --------------------- %
+% ------------------------ END: rlvEntryContinuous.m -------------------- %
 % ----------------------------------------------------------------------- %
 
 % ----------------------------------------------------------------------- %
-% -------------------------- BEGIN: vsopcEndpoint.m --------------------- %
+% ------------------------ BEGIN: rlvEntryEndpoint.m -------------------- %
 % ----------------------------------------------------------------------- %
-function output = socpEndpoint(input)
-    J  = input.phase.integral;
-    output.objective = J;
+function output = rlvEntryEndpoint(input)
+
+latf = input.phase.finalstate(3);
+output.objective = -latf;
 end
 % ----------------------------------------------------------------------- %
-% --------------------------- END: vsopcEndpoint.m ---------------------- %
+% ------------------------- END: rlvEntryEndpoint.m --------------------- %
 % ----------------------------------------------------------------------- %
-
 ```
 
-代码仿真结果
+## 代码仿真结果
 
-状态量：
+高度：
 
-![spacecraft_ocp_state](./../images/img-2024-06-22/spacecraft_ocp_state.png)
+![rlvAltitude](./../images/img-2024-06-22/rlvAltitude.png)
 
-控制量：
+速度：
 
-![spacecraft_ocp_contro](./../images/img-2024-06-22/spacecraft_ocp_control.png)
+![rlvSpeed](./../images/img-2024-06-22/rlvSpeed.png)
 
-论文仿真结果：
+经纬度：
 
-状态量：
+![rlvLonLat](./../images/img-2024-06-22/rlvLonLat.png)
 
-![paper_state](./../images/img-2024-06-22/paper_state.png)
+飞行路径角度：
 
-控制量：
+![rlvFlightPathAngle](./../images/img-2024-06-22/rlvFlightPathAngle.png)
 
-![paper_control](./../images/img-2024-06-22/paper_control.png)
+攻角：
+
+![rlvAngleofAttack](./../images/img-2024-06-22/rlvAngleofAttack.png)
+
+倾斜角：
+
+![rlvBankAngle](./../images/img-2024-06-22/rlvBankAngle.png)
 
 # 最后
+
+关于可复用火箭再入大气层的最优轨迹规划问题，没有写得很详细每个参数为什么这么取的原因，是我觉得现在大家都大概率不需要解决这个问题。所以诸如攻角、仰角、迎角之类的变量不去解释为什么要这么写。
+
+**只是希望通过这样一系列的例子告诉大家GPOPS-II应该怎么使用的思路。**
+
+> - 动力学方程应该怎么写？
+> - 性能指标应该怎么写？
+> - 约束应该怎么写？
+> - 猜测应该怎么写？
+> - 画图怎么画？
+
+要被解决的问题是无限的，只有掌握了方法论，才能一法通时万法通。
 
 欢迎通过邮箱联系我：lordofdapanji@foxmail.com
 
