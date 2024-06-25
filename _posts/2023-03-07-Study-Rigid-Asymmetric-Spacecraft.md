@@ -286,27 +286,36 @@ function D = LGL_Dmatrix(tau)
     D(1,1) = -n*(n-1)/4; D(n,n) = -D(1,1);
 end
 ```
-## 3. 子函数 LGL_nodes()
+## 3. 子函数 LGL_weights()
 
 ```matlab
 %--------------------------------------------------------------------------
-% LGL_nodes.m
+% LGL_weights.m
+% determines Gaussian quadrature weights using Lagrange-Gauss-Lobatto (LGL)
+% nodes
+%--------------------------------------------------------------------------
+% w = LGL_weights(tau)
+% tau: LGL nodes
+%   w: Gaussian quadrature weights
+%--------------------------------------------------------------------------
 % Author: Daniel R. Herber, Graduate Student, University of Illinois at
 % Urbana-Champaign
 % Date: 06/04/2015
 %--------------------------------------------------------------------------
-function tau = LGL_nodes(N)
-    thetak = (4*[1:N]-1)*pi/(4*N+2);
-    sigmak = -(1-(N-1)/(8*N^3)-(39-28./sin(thetak).^2)/(384*N^4)).*cos(thetak);
-    ze = (sigmak(1:N-1)+sigmak(2:N))/2;  
-    ep = eps*10; 
-    ze1 = ze+ep+1; 
-    while max(abs(ze1-ze))>=ep,
-      ze1 = ze;
-      [dy,y] = lepoly(N,ze);
-      ze = ze-(1-ze.*ze).*dy./(2*ze.*dy-N*(N+1)*y); 
-    end;
-    tau=[-1,ze,1]'; % column vector
+function w = LGL_weights(tau)
+    % number of nodes
+    N = length(tau)-1;
+    
+    % See Page 99 of the book: J. Shen, T. Tang and L. Wang, Spectral Methods:
+    % Algorithms, Analysis and Applications, Springer Series in Compuational
+    % Mathematics, 41, Springer, 2011. 
+    % Uses the function: lepoly() 
+    % Original function: [varargout] = legslb(n) located at
+    % http://www1.spms.ntu.edu.sg/~lilian/bookcodes/legen/legslb.m
+    [~,y] = lepoly(N,tau(2:end-1));
+    % Use the weight expression (3.188) to compute the weights
+    w = [2/(N*(N+1));2./(N*(N+1)*y.^2);2/(N*(N+1))]; 
+
 end
 ```
 
