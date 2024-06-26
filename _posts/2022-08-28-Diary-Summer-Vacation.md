@@ -1,5 +1,5 @@
 ---
-permalink: douban/:year-:month-:day/:title
+permalink: /:year-:month-:day/:title
 layout: post
 title:  "以前的暑假"
 author: "Lei Lie"
