@@ -68,7 +68,6 @@ def doc2pdf(word_path, file_path):
     word.Quit()
     print(f"Saved {file_path}")  
 
-
 # 转换docx为pdf
 def docx2pdf(word_path, file_path):      
     # 检查 PDF 文件是否存在，如果存在则删除  
@@ -143,5 +142,7 @@ if __name__ == '__main__':
 ![img1](./../images/img-2024-07-07/img1.png)
 
 ![img2](./../images/img-2024-07-07/img2.png)
+
+相应的代码放在[这里](https:\\luwin1127.github.io\assets\download\files-07-07\wordConvert.zip)。
 
 全文完。
