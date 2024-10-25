@@ -36,7 +36,7 @@ tag: notdouban
 - Chebyshev-Gauss-Lobatto（CGL）点；
 - Legendre-Gauss-Lobatto（LGL）点；
 - Legendre-Gauss（LG）点；
-- Legendre--Gauss-Radau（LGR）点。
+- Legendre-Gauss-Radau（LGR）点。
 
 这些配点是 Legendre 多项式或者 Legendre 多项式与其导数线性组合的根。
 
