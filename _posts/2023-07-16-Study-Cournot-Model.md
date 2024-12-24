@@ -463,6 +463,56 @@ $$
 >$$
 >
 
+把画图代码也放在下面。
+
+```matlab
+clc;clear;close all;
+
+%% 01. 设定博弈参数
+a = 2;
+c1 = 1;
+c2_L = 3/4;
+c2_H = 5/4;
+mu = 1/2;
+
+%% 02. 列出不同成本下的产量函数和利润函数
+% 画图用
+q1_plt = 0:1e-2:1;
+q2_L_plt = -1.5:1e-2:1.5;
+q2_H_plt = -1.5:1e-2:1.5;
+% 02-1 企业1不知道企业2的成本类型
+% 此处为空
+
+% 02-2 企业2为低成本类型
+q1_case2 = 0.5 * (1 - q2_L_plt);
+q2_L_case2 = 0.5 * (5/4 - q1_case2);
+
+% 02-3 企业3为高成本类型
+q1_case3 = 0.5 * (1 - q2_H_plt);
+q2_H_case3 = 0.5 * (3/4 - q1_case3);
+
+%% 03. 画图
+figure('color',[1,1,1]);
+% 企业1不知道企业2的成本类型
+plot([0 0.5],[1 0],'LineWidth', 1.5);hold on;
+% 企业2为低成本类型
+plot(q1_case2, q2_L_case2, 'LineWidth', 1.5);
+% 企业3为高成本类型
+plot(q1_case3, q2_H_case3, 'LineWidth', 1.5);
+xlabel('$q_1$','Interpreter','Latex');
+ylabel('$q_2$','Interpreter','Latex');
+axis([0 1.3 0 1])
+set(gca,'FontName','Times New Roman','FontSize',15);
+```
+
+结果图如下。
+
+<!-- 图片居中 -->
+<div align=center><img src="../../images/img-2023-07-16/result_of_cournot_game.jpg"></div>
+
+<!-- 图片不居中 -->
+<!-- ![img1](../../images/img-2023-07-16/result_of_cournot_game.jpg) -->
+
 # 最后
 
 欢迎通过邮箱联系我：lordofdapanji@foxmail.com
