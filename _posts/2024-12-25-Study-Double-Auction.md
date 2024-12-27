@@ -39,14 +39,15 @@ tag: notdouban
 > 2. 只有买方知道$v$（该商品对买方的价值）；
 > 3. $c$和$v$在$[0,1]$均匀分布，概率分布函数$f(x)=1/(b-a) \quad x \in [a,b]$为公共知识。
 
-在该贝叶斯博弈中，卖方的策略（即要价）$p_s$是$c$的函数，为$p_s(c)$；买方的策略（即出价）$p_b$是$v$的函数，为$p_b(v)$。策略组合$(p_s^*(c),p_b^*(v))$是一个贝叶斯均衡（Bayesian Nash Equilibrium，BNE），假定下列两个条件成立：
+在该贝叶斯博弈中，卖方的策略（即要价）$p_s$是$c$的函数，为$p_s(c)$；买方的策略（即出价）$p_b$是$v$的函数，为$p_b(v)$。策略组合$(p_s^\*(c),p_b^\*(v))$是一个贝叶斯均衡（Bayesian Nash Equilibrium，BNE），假定下列两个条件成立：
 
 1. **卖方最优**：对于所有的$c \in [0,1]$，$p_s^*(c)$是下列最优化问题的解，为
+
    $$
    \max_{p_s} u_s = \max_{p_s}\left [ \frac{1}{2}(p_s + \text{E}[p_b(v)|p_b(v) \ge p_s]) - c \right ]\cdot \text{Prob}\{ p_b(v) \ge p_s \}
    $$
    
-   式中，$\text{E}[p_b(v)|p_b(v) \ge p_s]$为给定买方的出价**高于**卖方的要价的条件下，卖方预期**买方的出价**。
+   式中，$\text{E}[p_b(v)\|p_b(v) \ge p_s]$为给定买方的出价**高于**卖方的要价的条件下，卖方预期**买方的出价**。
    
 2. **买方最优**：对于所有的$v \in [0,1]$，$p_b^*(c)$是下列最优化问题的解，为
 
@@ -54,13 +55,13 @@ tag: notdouban
    \max_{p_b} u_b = \max_{p_b}\left [v- \frac{1}{2}(p_b + \text{E}[p_s(c)|p_b \ge p_s(c)])\right ]\cdot \text{Prob}\{ p_b \ge p_s(c) \}
    $$
 
-   式中，$\text{E}[p_s(c)|p_b \ge p_s(c)])$为给定买方的出价**高于**卖方的要价的条件下，买方预期**卖方的要价**。
+   式中，$\text{E}[p_s(c)\|p_b \ge p_s(c)]$为给定买方的出价**高于**卖方的要价的条件下，买方预期**卖方的要价**。
 
 > **问题1**：为什么会有上述两个目标函数的形式？
 >
-> **回答**：见前文提到的模型流程，在$p_b \ge p_s$的条件下，双方在$p = (p_s+p_b)/2$上成交。卖方的博弈收益为$u_s = (p_s + p_b)/2 -c$，$p_s$是卖方可以确定的变量，那么$p_b$要满足$p_b \ge p_s$的条件，所以要计算$p_b$在$p_b \ge p_s$内的期望博弈收益，写为$\text{E}[p_b(v)|p_b(v) \ge p_s])$。
+> **回答**：见前文提到的模型流程，在$p_b \ge p_s$的条件下，双方在$p = (p_s+p_b)/2$上成交。卖方的博弈收益为$u_s = (p_s + p_b)/2 -c$，$p_s$是卖方可以确定的变量，那么$p_b$要满足$p_b \ge p_s$的条件，所以要计算$p_b$在$p_b \ge p_s$内的期望博弈收益，写为$\text{E}[p_b(v)\|p_b(v) \ge p_s]$。
 >
-> 买方的博弈收益为$u_b = v - (p_b+p_s)$，$p_b$是买方可以确定的变量，那么$p_s$要满足$p_b \ge p_s$的条件所以要计算$p_s$在$p_b \ge p_s$内的期望博弈收益，写为$\text{E}[p_s(c)|p_b \ge p_s(c)]$。
+> 买方的博弈收益为$u_b = v - (p_b+p_s)$，$p_b$是买方可以确定的变量，那么$p_s$要满足$p_b \ge p_s$的条件所以要计算$p_s$在$p_b \ge p_s$内的期望博弈收益，写为$\text{E}[p_s(c)\|p_b \ge p_s(c)]$。
 
 # 三、理论方法：贝叶斯均衡的解法
 
@@ -154,7 +155,7 @@ $$
 
 ### 3.1.3 求解卖方的目标函数
 
-将得到的$\text{Prob}\{p_b(v) \ge p_s\} = (\alpha_b + \beta_b - p_s)/\beta_b$和$\text{E}\{p_b(v) | p_b(v) \ge p_s\} = 0.5 (p_s + \alpha_b + \beta_b)$代入卖方的目标函数，有
+将得到的$\text{Prob}\{p_b(v) \ge p_s\} = (\alpha_b + \beta_b - p_s)/\beta_b$和$\text{E}\{p_b(v) \| p_b(v) \ge p_s\} = 0.5 (p_s + \alpha_b + \beta_b)$代入卖方的目标函数，有
 
 $$
 \begin{aligned}
@@ -275,7 +276,7 @@ $$
 
 ### 3.2.3 求解买方的目标函数
 
-将得到的$\text{Prob}\{p_b \ge p_s(c) \} = (p_b - \alpha_s)/\beta_s$和$\text{E}\{p_b(v) | p_b \ge p_s(c)\} = 0.5 (p_b + \alpha_s)$代入卖方的目标函数，有
+将得到的$\text{Prob}\{p_b \ge p_s(c) \} = (p_b - \alpha_s)/\beta_s$和$\text{E}\{p_b(v) \| p_b \ge p_s(c)\} = 0.5 (p_b + \alpha_s)$代入卖方的目标函数，有
 
 $$
 \begin{aligned}
@@ -347,6 +348,7 @@ $$
 
 
 把$\beta_s$和$\beta_b$代入卖家和买家的一阶最优化条件，得到
+
 $$
 \left \{ \begin{aligned}
 &\frac{1}{3}\alpha_s = \alpha_b,\\
@@ -487,4 +489,4 @@ text(0.25,0.2,'$v = c$','Interpreter','Latex','FontSize',13)
 
 # 附录
 
-**条件期望的定义**：条件期望是概率论中的一个基本概念，它描述了在给定某些信息的情况下，一个随机变量的期望值。具体来说，设$X$和$Y$是两个随机变量，那么$X$在给定$Y=y$的条件下的期望值，记作$E[X|Y=y]$，定义为：$E[X|Y=y] = \sum_{x} x \cdot P(X=x|Y=y)$。对于连续随机变量，条件期望的定义类似，只是求和变成了积分：$E[X|Y=y] = \int_{-\infty}^{\infty} x \cdot f_{X|Y}(x|y) \text{d}x$。其中，$f_{X|Y}(x|y)$是$X$在给定$Y=y$的条件下的条件概率密度函数。
+**条件期望的定义**：条件期望是概率论中的一个基本概念，它描述了在给定某些信息的情况下，一个随机变量的期望值。具体来说，设$X$和$Y$是两个随机变量，那么$X$在给定$Y=y$的条件下的期望值，记作$E[X\|Y=y]$，定义为：$E[X\|Y=y] = \sum_{x} x \cdot P(X=x\|Y=y)$。对于连续随机变量，条件期望的定义类似，只是求和变成了积分：$E[X\|Y=y] = \int_{-\infty}^{\infty} x \cdot f_{X\|Y}(x\|y) \text{d}x$。其中，$f_{X\|Y}(x\|y)$是$X$在给定$Y=y$的条件下的条件概率密度函数。
