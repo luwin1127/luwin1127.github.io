@@ -11,11 +11,11 @@ tag: notdouban
 
 # 矩阵对策的基本定理
 
-> **定理4** 设$x^* \in S_1^*$，$y^* \in S_2^*$，则$(x^*,y^*)$为$G$的解的充要条件是：存在数$v$，使得$x^*$和$y^*$分别是不等式组（I）和（II）的解，且$v = V_G$。
+> **定理4** 设$x^\* \in S_1^\*$，$y^\* \in S_2^*$，则$(x^\*,y^\*)$为$G$的解的充要条件是：存在数$v$，使得$x^\*$和$y^\*$分别是不等式组（I）和（II）的解，且$v = V_G$。
 > 
 > $$
 > (\text{I}) \ \left \{ \begin{array}{l}
-> 	\mathop{\sum}\limits_i a_{ij}x_i \ge v, \quad j = 1,\cdots,n	\\
+> 	\mathop{\sum}\limits_i a_{ij} x_i \ge v, \quad j = 1,\cdots,n	\\
 > 	\mathop{\sum}\limits_i x_i = 1	\\
 > 	x_i \ge 0, \quad i = 1,\cdots,m
 > \end{array}\right.
@@ -23,7 +23,7 @@ tag: notdouban
 >
 > $$
 > (\text{II}) \ \left \{ \begin{array}{l}
-> 	\mathop{\sum}\limits_j a_{ij}y_j \le v, \quad i = 1,\cdots,m	\\
+> 	\mathop{\sum}\limits_j a_{ij} y_j \le v, \quad i = 1,\cdots,m	\\
 > 	\mathop{\sum}\limits_j y_j = 1	\\
 > 	y_j \ge 0, \quad j = 1,\cdots,n
 > \end{array}\right.

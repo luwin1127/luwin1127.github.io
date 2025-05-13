@@ -123,33 +123,33 @@ tag: notdouban
 
 ```latex
 % 定义新格式——中文全称 (英文全称, 英文简称)
-\newacronymstyle{desc-long-short-v2}%
-{%
-  \ifglshaslong{\glslabel}{\glsgenacfmt}{\glsgenentryfmt}%
-}%
-{%
-  \renewcommand*{\GenericAcronymFields}{description={\the\glslongtok}}%
-  \renewcommand*{\genacrfullformat}[2]{%
+\newacronymstyle{desc-long-short-v2}
+{
+  \ifglshaslong{\glslabel}{\glsgenacfmt}{\glsgenentryfmt}
+}
+{
+  \renewcommand*{\GenericAcronymFields}{description={\the\glslongtok}}
+  \renewcommand*{\genacrfullformat}[2]{
    \protect\firstacronymfont{\glsentrydesc{##1}}##2\space
-   (\glsentrylong{##1},\space\glsentryshort{##1})%
-  }%
-  \renewcommand*{\Genacrfullformat}[2]{% 给纯英文的使用，格式——英文全称 (英文简称)
+   (\glsentrylong{##1},\space\glsentryshort{##1})
+  }
+  \renewcommand*{\Genacrfullformat}[2]{
    \protect\firstacronymfont{\Glsentrylong{##1}}##2\space
-   (\glsentryshort{##1})%
-  }%
-  \renewcommand*{\genplacrfullformat}[2]{%
+   (\glsentryshort{##1})
+  }
+  \renewcommand*{\genplacrfullformat}[2]{
    \protect\firstacronymfont{\glsentrydescpl{##1}}##2\space
-   (\glsentrylongpl{##1},\space\glsentryshortpl{##1})%
-  }%
-  \renewcommand*{\Genplacrfullformat}[2]{%
+   (\glsentrylongpl{##1},\space\glsentryshortpl{##1})
+  }
+  \renewcommand*{\Genplacrfullformat}[2]{
    \protect\firstacronymfont{\Glsentrydescpl{##1}}##2\space
-   (\glsentrylongpl{##1},\space\glsentryshortpl{##1})%
-  }%
-  \renewcommand*{\acronymentry}[1]{\acronymfont{\glsentryshort{##1}}}%
-  \renewcommand*{\acronymsort}[2]{##1}%
-  \renewcommand*{\acronymfont}[1]{##1}%
-  \renewcommand*{\firstacronymfont}[1]{\acronymfont{##1}}%
-  \renewcommand*{\acrpluralsuffix}{\glspluralsuffix}%
+   (\glsentrylongpl{##1},\space\glsentryshortpl{##1})
+  }
+  \renewcommand*{\acronymentry}[1]{\acronymfont{\glsentryshort{##1}}}
+  \renewcommand*{\acronymsort}[2]{##1}
+  \renewcommand*{\acronymfont}[1]{##1}
+  \renewcommand*{\firstacronymfont}[1]{\acronymfont{##1}}
+  \renewcommand*{\acrpluralsuffix}{\glspluralsuffix}
 }
 
 % 导入缩写风格
@@ -207,9 +207,9 @@ tag: notdouban
 
 下面给出设置流程：
 
-1. 打开VsCode，按下`f1`，进入首选项`setting.json`
+- 打开VsCode，按下`f1`，进入首选项`setting.json`
 
-2. 在`latex-workshop.latex.tools`中写入如下代码——**这一步是为了设置编译工具所需参数**
+- 在`latex-workshop.latex.tools`中写入如下代码——**这一步是为了设置编译工具所需参数**
 
 ```latex
 "latex-workshop.latex.tools": [
@@ -263,7 +263,7 @@ tag: notdouban
    ],
 ```
 
-3. 在`latex-workshop.latex.recipes`中写入如下代码——**这一步是为了设置编译链**
+- 在`latex-workshop.latex.recipes`中写入如下代码——**这一步是为了设置编译链**
 
 ```latex
 "latex-workshop.latex.recipes": [
@@ -304,7 +304,7 @@ tag: notdouban
     ],
 ```
 
-4. 选择对应编译链进行编译。
+- 选择对应编译链进行编译。
 
 # 三、解决思路记录
 
