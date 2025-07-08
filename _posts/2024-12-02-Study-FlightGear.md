@@ -3,7 +3,7 @@ permalink: /:year-:month-:day/:title
 layout: post
 title:  "FlightGear+MATLAB+飞行手柄实现实时飞控视景系统"
 author: "Lei Lie"
-categories: Essay
+categories: Study
 tag: notdouban
 ---
 

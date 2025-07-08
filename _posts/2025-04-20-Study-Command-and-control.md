@@ -3,7 +3,7 @@ permalink: /:year-:month-:day/:title
 layout: post
 title:  "指挥控制原理-笔记"
 author: "Lei Lie"
-categories: Essay
+categories: Study
 tag: notdouban 
 ---
 

@@ -3,7 +3,7 @@ permalink: /:year-:month-:day/:title
 layout: post
 title:  "统计期刊次数"
 author: "Lei Lie"
-categories: Essay
+categories: Study
 tag: notdouban 
 ---
 

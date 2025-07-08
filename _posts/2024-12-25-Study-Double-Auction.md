@@ -3,7 +3,7 @@ permalink: /:year-:month-:day/:title
 layout: post
 title:  "双方叫价拍卖：一种贝叶斯博弈均衡的解法"
 author: "Lei Lie"
-categories: Essay
+categories: Study
 tag: notdouban 
 ---
 [TOC]

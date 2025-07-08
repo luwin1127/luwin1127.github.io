@@ -3,7 +3,7 @@ permalink: /:year-:month-:day/:title
 layout: post
 title:  "奥西波夫：俄国的“兰切斯特”方程"
 author: "Lei Lie"
-categories: Essay
+categories: Study
 tag: notdouban
 ---
 

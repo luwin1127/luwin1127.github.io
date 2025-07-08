@@ -3,7 +3,7 @@ permalink: /:year-:month-:day/:title
 layout: post
 title:  "AI辅助科研自动化"
 author: "Lei Lie"
-categories: Essay
+categories: Study
 tag: notdouban 
 ---
 

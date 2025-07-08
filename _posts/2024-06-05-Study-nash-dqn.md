@@ -3,7 +3,7 @@ permalink: /:year-:month-:day/:title
 layout: post
 title:  "纳什均衡的DQN解法：Nash-DQN"
 author: "Lei Lie"
-categories: Essay
+categories: Study,Code
 tag: notdouban
 ---
 

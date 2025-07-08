@@ -3,7 +3,7 @@ permalink: /:year-:month-:day/:title
 layout: post
 title:  "飞机在战争中的作用：第四种武器的曙光"
 author: "Lei Lie"
-categories: Essay
+categories: Study
 tag: notdouban
 ---
 

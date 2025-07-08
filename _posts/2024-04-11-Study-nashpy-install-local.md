@@ -3,7 +3,7 @@ permalink: /:year-:month-:day/:title
 layout: post
 title:  "本地安装nashpy的过程"
 author: "Lei Lie"
-categories: Essay
+categories: Study
 tag: notdouban
 ---
 

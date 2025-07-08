@@ -3,7 +3,7 @@ permalink: /:year-:month-:day/:title
 layout: post
 title:  "库诺特（Cournot）模型：完全信息博弈和不完全信息博弈的求解及代码实现"
 author: "Lei Lie"
-categories: Essay
+categories: Study
 tag: notdouban
 ---
 

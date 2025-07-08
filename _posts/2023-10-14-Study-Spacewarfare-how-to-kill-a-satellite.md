@@ -3,7 +3,7 @@ permalink: /:year-:month-:day/:title
 layout: post
 title:  "太空大战：如何摧毁一颗卫星"
 author: "Lei Lie"
-categories: Essay
+categories: Study
 tag: notdouban
 ---
 

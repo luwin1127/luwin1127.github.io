@@ -3,7 +3,7 @@ permalink: /:year-:month-:day/:title
 layout: post
 title:  "2023年中国运载火箭发射记录"
 author: "Lei Lie"
-categories: Essay
+categories: Study
 tag: notdouban
 ---
 

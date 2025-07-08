@@ -3,7 +3,7 @@ permalink: /:year-:month-:day/:title
 layout: post
 title:  "GPOPS-II教程(2): 可复用火箭再入大气层最优轨迹规划问题"
 author: "Lei Lie"
-categories: Essay
+categories: Study,Code
 tag: notdouban
 ---
 

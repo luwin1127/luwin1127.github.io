@@ -3,7 +3,7 @@ permalink: /:year-:month-:day/:title
 layout: post
 title:  "基于虚实一体的卫星集群编队战术训练系统架构设计总结"
 author: "Lei Lie"
-categories: Essay
+categories: Study
 tag: notdouban 
 ---
 

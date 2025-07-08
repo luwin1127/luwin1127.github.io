@@ -3,7 +3,7 @@ permalink: /:year-:month-:day/:title
 layout: post
 title:  "走向太空：选择液体火箭还是固体火箭？"
 author: "Lei Lie"
-categories: Essay
+categories: Study
 tag: notdouban
 ---
 

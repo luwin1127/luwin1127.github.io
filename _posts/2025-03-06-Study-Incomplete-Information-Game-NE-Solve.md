@@ -3,7 +3,7 @@ permalink: /:year-:month-:day/:title
 layout: post
 title:  "关于不完全信息博弈均衡求解的记录"
 author: "Lei Lie"
-categories: Essay
+categories: Study
 tag: notdouban 
 ---
 

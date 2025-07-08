@@ -3,7 +3,7 @@ permalink: /:year-:month-:day/:title
 layout: post
 title:  "GPOPS-II教程(5): 月球探测器着陆最优控制问题"
 author: "Lei Lie"
-categories: Essay
+categories: Study,Code
 tag: notdouban
 ---
 

@@ -3,7 +3,7 @@ permalink: /:year-:month-:day/:title
 layout: post
 title:  "Word转PDF和图片"
 author: "Lei Lie"
-categories: Essay
+categories: Study,Code
 tag: notdouban
 ---
 

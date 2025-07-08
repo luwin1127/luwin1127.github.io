@@ -3,7 +3,7 @@ permalink: /:year-:month-:day/:title
 layout: post
 title:  "如何撰写学术交流电子邮件？"
 author: "Lei Lie"
-categories: Essay
+categories: Study
 tag: notdouban
 ---
 

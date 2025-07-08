@@ -3,7 +3,7 @@ permalink: /:year-:month-:day/:title
 layout: post
 title:  "GPOPS-II教程(1): 语法和一个最优控制问题案例"
 author: "Lei Lie"
-categories: Essay
+categories: Study,Code
 tag: notdouban
 ---
 

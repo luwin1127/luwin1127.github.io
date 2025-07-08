@@ -3,7 +3,7 @@ permalink: /:year-:month-:day/:title
 layout: post
 title:  "Python、STK、MATLAB的连接和使用"
 author: "Lei Lie"
-categories: Essay
+categories: Study
 tag: notdouban
 ---
 

@@ -3,7 +3,7 @@ permalink: /:year-:month-:day/:title
 layout: post
 title:  "综述：数字孪生在航空发动机中的应用"
 author: "Lei Lie"
-categories: Essay
+categories: Study
 tag: notdouban
 ---
 

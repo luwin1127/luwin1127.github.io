@@ -3,7 +3,7 @@ permalink: /:year-:month-:day/:title
 layout: post
 title:  "SCI期刊名缩写列表"
 author: "Lei Lie"
-categories: Essay
+categories: Study
 tag: notdouban
 ---
 

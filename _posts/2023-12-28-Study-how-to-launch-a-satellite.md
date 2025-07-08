@@ -3,7 +3,7 @@ permalink: /:year-:month-:day/:title
 layout: post
 title:  "*筚路蓝缕：把一颗卫星发送上天分为几步？"
 author: "Lei Lie"
-categories: Essay
+categories: Study
 tag: notdouban
 ---
 
